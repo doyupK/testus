@@ -1,5 +1,7 @@
-package com.testus.testus.common.oauth;
+package com.testus.testus.service;
 
+import com.testus.testus.common.oauth.OAuth2UserInfo;
+import com.testus.testus.common.oauth.OAuth2UserInfoFactory;
 import com.testus.testus.common.oauth.exception.OAuth2AuthenticationProcessingException;
 import com.testus.testus.config.security.OAuth2UserPrincipal;
 import lombok.RequiredArgsConstructor;
@@ -43,9 +45,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 oAuth2User.getAttributes());
 
         // OAuth2UserInfo field value validation
-        if (!StringUtils.hasText(oAuth2UserInfo.getEmail())) {
-            throw new OAuth2AuthenticationProcessingException("Email not found from OAuth2 provider");
-        }
+//        if (!StringUtils.hasText(oAuth2UserInfo.getEmail())) {
+//            throw new OAuth2AuthenticationProcessingException("Email not found from OAuth2 provider");
+//        }
 
         return new OAuth2UserPrincipal(oAuth2UserInfo);
     }

@@ -1,11 +1,10 @@
 package com.testus.testus.config.security;
 
-import com.testus.testus.common.oauth.CustomOAuth2UserService;
+import com.testus.testus.service.CustomOAuth2UserService;
 import com.testus.testus.common.oauth.handler.OAuth2AuthenticationFailureHandler;
 import com.testus.testus.common.oauth.handler.OAuth2AuthenticationSuccessHandler;
 import com.testus.testus.util.HttpCookieOAuth2AuthorizationRequestRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -50,7 +49,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers(antMatcher("/api/admin/**")).hasRole("ADMIN")
                         .requestMatchers(antMatcher("/api/user/**")).hasRole("USER")
-                        .requestMatchers(antMatcher("/h2-console/**")).permitAll()
+//                        .requestMatchers(antMatcher("/h2-console/**")).permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sessions -> sessions.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

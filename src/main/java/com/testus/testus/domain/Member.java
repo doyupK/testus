@@ -17,7 +17,7 @@ public class Member {
     private String userName;
 
     @Column(nullable = false)
-    private SocialType providerType;
+    private String providerType;
 
     @Column(nullable = false)
     private String providerSubject;
@@ -28,6 +28,9 @@ public class Member {
     @JsonIgnore
     @Column
     private String userPassword;
+
+    @Column
+    private char status;
 
     @Column
     private char marketingYn;
