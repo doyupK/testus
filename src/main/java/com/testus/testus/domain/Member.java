@@ -55,7 +55,7 @@ public class Member {
 
     @PrePersist
     public void prePersist(){
-        this.marketingYn = 'n';
+        this.marketingYn = 'N';
     }
 
 
@@ -86,7 +86,7 @@ public class Member {
 
     @Getter
     @Builder
-    public static class MemberInfoUpdateDto {
+    public static class MemberInfoUpdateOrSignupDto {
         private String userName;
         private String phoneNumber;
         @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -96,5 +96,11 @@ public class Member {
         @Nullable
         private String password;
         private char marketingYn;
+    }
+    @Getter
+    @Builder
+    public static class LoginDto {
+        private String userEmail;
+        private String password;
     }
 }

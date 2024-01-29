@@ -4,6 +4,7 @@ import com.testus.testus.common.oauth.userInfo.OAuth2UserInfo;
 import com.testus.testus.common.oauth.userInfo.OAuth2UserInfoFactory;
 import com.testus.testus.common.response.ResponseDto;
 import com.testus.testus.common.response.exception.Code;
+import com.testus.testus.common.response.exception.CustomException;
 import com.testus.testus.domain.Member;
 import com.testus.testus.enums.SocialType;
 import com.testus.testus.repository.MemberRepo;
@@ -46,11 +47,11 @@ public class MemberServiceImpl implements MemberService{
 
     @Override
     @Transactional
-    public ResponseDto<Member.MemberInfoDto> updateInfo(Member.MemberInfoUpdateDto memberInfoUpdateDto, Member member) {
-        if (memberInfoUpdateDto.getPassword() == null ){
-            memberRepo.updateInfo(memberInfoUpdateDto, member.getUserSeq(), null);
+    public ResponseDto<Member.MemberInfoDto> updateInfo(Member.MemberInfoUpdateOrSignupDto memberInfoUpdateOrSignupDto, Member member) {
+        if (memberInfoUpdateOrSignupDto.getPassword() == null ){
+            memberRepo.updateInfo(memberInfoUpdateOrSignupDto, member.getUserSeq(), null);
         } else {
-            memberRepo.updateInfo(memberInfoUpdateDto, member.getUserSeq(), passwordEncoder.encode(memberInfoUpdateDto.getPassword()));
+            memberRepo.updateInfo(memberInfoUpdateOrSignupDto, member.getUserSeq(), passwordEncoder.encode(memberInfoUpdateOrSignupDto.getPassword()));
         }
         return new ResponseDto<>(Code.SUCCESS);
     }
@@ -79,15 +80,47 @@ public class MemberServiceImpl implements MemberService{
                     .build();
             member = memberRepo.save(member);
         }
-        return checkMemberStatus(member);
+        return checkMemberStatusAndReturn(member);
     }
 
     @Transactional(readOnly = true)
-    public ResponseDto<Member.MemberInfoDto> checkMemberStatus(Member member) {
+    public ResponseDto<Member.MemberInfoDto> checkMemberStatusAndReturn(Member member) {
         if (member.getStatus() == 'D'){ // 회원 정보 업데이트 필요
             return new ResponseDto<>(Code.REQUIRED_UPDATE_MEMBER_INFO, member.convertMemberInfoResponse());
         } else {
             return new ResponseDto<>(Code.SUCCESS, member.convertMemberInfoResponse());
+        }
+    }
+
+    @Transactional
+    public ResponseDto<Code> signup(Member.MemberInfoUpdateOrSignupDto dto) {
+        Optional<Member> oneByUserEmail = memberRepo.findOneByUserEmail(dto.getUserEmail());
+        if (oneByUserEmail.isPresent()){
+            throw new CustomException(Code.ALREADY_MEMBER);
+        } else {
+            Member member = Member.builder()
+                    .providerType("TESTUS")
+                    .userPassword(passwordEncoder.encode(dto.getPassword()))
+                    .userName(dto.getUserName())
+                    .userEmail(dto.getUserEmail())
+                    .status('Y')
+                    .marketingYn(dto.getMarketingYn())
+                    .build();
+            memberRepo.save(member);
+            return new ResponseDto<>(Code.SUCCESS);
+        }
+    }
+
+    @Transactional
+    public ResponseDto<Member.MemberInfoDto> login(Member.LoginDto dto, HttpServletResponse response) {
+        Member member = memberRepo.findOneByUserEmail(dto.getUserEmail()).orElseThrow(
+                () -> new CustomException(Code.NOT_FOUND_USER)
+        );
+        if (passwordEncoder.matches(member.getUserPassword(), dto.getPassword())){
+            throw new CustomException(Code.PASSWORD_UNMATCHED);
+        } else {
+            jwtTokenUtil.addJwtTokenInHeader(member, response);
+            return checkMemberStatusAndReturn(member);
         }
     }
 }

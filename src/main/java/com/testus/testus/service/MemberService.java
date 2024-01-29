@@ -12,6 +12,6 @@ public interface MemberService {
 
     Optional<Member> findMember(String id);
 
-    Object updateInfo(Member.MemberInfoUpdateDto memberInfoUpdateDto, Member member);
+    Object updateInfo(Member.MemberInfoUpdateOrSignupDto memberInfoUpdateOrSignupDto, Member member);
 
 }

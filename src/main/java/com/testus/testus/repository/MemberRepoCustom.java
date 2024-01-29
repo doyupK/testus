@@ -4,6 +4,6 @@ import com.testus.testus.domain.Member;
 
 public interface MemberRepoCustom {
 
-    void updateInfo(Member.MemberInfoUpdateDto memberInfoUpdateDto, int userSeq, String encodePassword);
+    void updateInfo(Member.MemberInfoUpdateOrSignupDto memberInfoUpdateOrSignupDto, int userSeq, String encodePassword);
 
 }

@@ -1,6 +1,7 @@
 package com.testus.testus.controller;
 
 import com.testus.testus.common.response.ResponseDto;
+import com.testus.testus.common.response.exception.Code;
 import com.testus.testus.config.security.UserDetailsImpl;
 import com.testus.testus.domain.Member;
 import com.testus.testus.service.MemberServiceImpl;
@@ -21,6 +22,23 @@ public class MemberController {
 
     private final MemberServiceImpl memberService;
 
+    @PostMapping("/signup")
+    @Operation(summary = "일반 회원가입", description = "일반 회원가입 API")
+    public ResponseEntity<ResponseDto<Code>> signUp(@RequestBody Member.MemberInfoUpdateOrSignupDto dto){
+        return ResponseEntity
+                .ok()
+                .body(memberService.signup(dto));
+    }
+
+    @PostMapping("/login")
+    @Operation(summary = "일반 로그인", description = "일반 로그인 API")
+    public ResponseEntity<ResponseDto<Member.MemberInfoDto>> login(@RequestBody Member.LoginDto dto,
+                                                                   HttpServletResponse response){
+        return ResponseEntity
+                .ok()
+                .body(memberService.login(dto, response));
+    }
+
     @PostMapping("/oauth/login/{provider}")
     @Operation(summary = "OAuth 로그인", description = "OAuth 로그인 API")
     public ResponseEntity<ResponseDto<Member.MemberInfoDto>> oauthLogin(@PathVariable String provider,
@@ -38,15 +56,15 @@ public class MemberController {
     public ResponseEntity<ResponseDto<Member.MemberInfoDto>> statusCheck(@AuthenticationPrincipal UserDetailsImpl userDetails){
         return ResponseEntity
                 .ok()
-                .body(memberService.checkMemberStatus(userDetails.getMember()));
+                .body(memberService.checkMemberStatusAndReturn(userDetails.getMember()));
     }
 
     @PostMapping("/member/info")
     @Operation(summary = "회원정보 업데이트", description = "회원정보 업데이트용 API")
-    public ResponseEntity<ResponseDto<Member.MemberInfoDto>> memberInfoUpdate(@RequestBody Member.MemberInfoUpdateDto memberInfoUpdateDto,
+    public ResponseEntity<ResponseDto<Member.MemberInfoDto>> memberInfoUpdate(@RequestBody Member.MemberInfoUpdateOrSignupDto memberInfoUpdateOrSignupDto,
                                                                               @AuthenticationPrincipal UserDetailsImpl userDetails){
         return ResponseEntity
                 .ok()
-                .body(memberService.updateInfo(memberInfoUpdateDto, userDetails.getMember()));
+                .body(memberService.updateInfo(memberInfoUpdateOrSignupDto, userDetails.getMember()));
     }
 }

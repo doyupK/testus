@@ -14,26 +14,26 @@ public class MemberRepoImpl implements MemberRepoCustom {
 
 
     @Override
-    public void updateInfo(Member.MemberInfoUpdateDto memberInfoUpdateDto, int userSeq, String encodePassword) {
+    public void updateInfo(Member.MemberInfoUpdateOrSignupDto memberInfoUpdateOrSignupDto, int userSeq, String encodePassword) {
         if (encodePassword == null){
             queryFactory.update(member)
-                    .set(member.userName, memberInfoUpdateDto.getUserName())
-                    .set(member.userEmail, memberInfoUpdateDto.getUserEmail())
+                    .set(member.userName, memberInfoUpdateOrSignupDto.getUserName())
+                    .set(member.userEmail, memberInfoUpdateOrSignupDto.getUserEmail())
                     .set(member.status, 'Y')
-                    .set(member.phoneNumber, memberInfoUpdateDto.getPhoneNumber())
-                    .set(member.marketingYn, memberInfoUpdateDto.getMarketingYn())
-                    .set(member.birthDay, memberInfoUpdateDto.getBirthDay())
+                    .set(member.phoneNumber, memberInfoUpdateOrSignupDto.getPhoneNumber())
+                    .set(member.marketingYn, memberInfoUpdateOrSignupDto.getMarketingYn())
+                    .set(member.birthDay, memberInfoUpdateOrSignupDto.getBirthDay())
                     .where(member.userSeq.eq(userSeq))
                     .execute();
         } else {
             queryFactory.update(member)
                     .set(member.userPassword, encodePassword)
-                    .set(member.userName, memberInfoUpdateDto.getUserName())
-                    .set(member.userEmail, memberInfoUpdateDto.getUserEmail())
+                    .set(member.userName, memberInfoUpdateOrSignupDto.getUserName())
+                    .set(member.userEmail, memberInfoUpdateOrSignupDto.getUserEmail())
                     .set(member.status, 'Y')
-                    .set(member.phoneNumber, memberInfoUpdateDto.getPhoneNumber())
-                    .set(member.marketingYn, memberInfoUpdateDto.getMarketingYn())
-                    .set(member.birthDay, memberInfoUpdateDto.getBirthDay())
+                    .set(member.phoneNumber, memberInfoUpdateOrSignupDto.getPhoneNumber())
+                    .set(member.marketingYn, memberInfoUpdateOrSignupDto.getMarketingYn())
+                    .set(member.birthDay, memberInfoUpdateOrSignupDto.getBirthDay())
                     .where(member.userSeq.eq(userSeq))
                     .execute();
         }
