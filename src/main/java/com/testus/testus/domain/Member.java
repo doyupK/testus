@@ -26,7 +26,7 @@ public class Member {
     @Column(nullable = false)
     private String providerType;
 
-    @Column(nullable = false)
+    @Column
     private String providerSubject;
 
     @Column

@@ -104,6 +104,7 @@ public class MemberServiceImpl implements MemberService{
                     .userName(dto.getUserName())
                     .userEmail(dto.getUserEmail())
                     .status('Y')
+                    .role("ROLE_USER")
                     .marketingYn(dto.getMarketingYn())
                     .build();
             memberRepo.save(member);
@@ -116,11 +117,11 @@ public class MemberServiceImpl implements MemberService{
         Member member = memberRepo.findOneByUserEmail(dto.getUserEmail()).orElseThrow(
                 () -> new CustomException(Code.NOT_FOUND_USER)
         );
-        if (passwordEncoder.matches(member.getUserPassword(), dto.getPassword())){
-            throw new CustomException(Code.PASSWORD_UNMATCHED);
-        } else {
+        if (passwordEncoder.matches(dto.getPassword(), member.getUserPassword())){
             jwtTokenUtil.addJwtTokenInHeader(member, response);
             return checkMemberStatusAndReturn(member);
+        } else {
+            throw new CustomException(Code.PASSWORD_UNMATCHED);
         }
     }
 }
