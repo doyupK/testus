@@ -1,9 +1,16 @@
 package com.testus.testus.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.testus.testus.enums.SocialType;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.lang.Nullable;
+
+import java.time.LocalDate;
 
 @Getter
 @Builder @AllArgsConstructor @NoArgsConstructor
@@ -17,25 +24,83 @@ public class Member {
     private String userName;
 
     @Column(nullable = false)
-    private SocialType providerType;
+    private String providerType;
 
-    @Column(nullable = false)
+    @Column
     private String providerSubject;
 
     @Column
     private String userEmail;
+
+    @Column
+    private String phoneNumber;
+
+    @Column
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+    private LocalDate birthDay;
 
     @JsonIgnore
     @Column
     private String userPassword;
 
     @Column
+    private char status;
+
+    @Column
     private char marketingYn;
+
+    @Column(nullable = false)
+    private String role;
 
     @PrePersist
     public void prePersist(){
-        this.marketingYn = 'n';
+        this.marketingYn = 'N';
     }
 
 
+    public MemberInfoDto convertMemberInfoResponse() {
+        return MemberInfoDto.builder()
+                .userSeq(this.userSeq)
+                .userName(this.userName)
+                .providerType(this.providerType)
+                .providerSubject(this.providerSubject)
+                .userEmail(this.userEmail)
+                .marketingYn(this.marketingYn)
+                .status(this.status)
+                .build();
+    }
+
+
+    @Getter
+    @Builder
+    public static class MemberInfoDto {
+        private int userSeq;
+        private String userName;
+        private String providerType;
+        private String providerSubject;
+        private String userEmail;
+        private char marketingYn;
+        private char status;
+    }
+
+    @Getter
+    @Builder
+    public static class MemberInfoUpdateOrSignupDto {
+        private String userName;
+        private String phoneNumber;
+        @DateTimeFormat(pattern = "yyyy-MM-dd")
+        private LocalDate birthDay;
+        private String gender;
+        private String userEmail;
+        @Nullable
+        private String password;
+        private char marketingYn;
+    }
+    @Getter
+    @Builder
+    public static class LoginDto {
+        private String userEmail;
+        private String password;
+    }
 }
