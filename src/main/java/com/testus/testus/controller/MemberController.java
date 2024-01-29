@@ -1,36 +1,52 @@
 package com.testus.testus.controller;
 
+import com.testus.testus.common.response.ResponseDto;
+import com.testus.testus.config.security.UserDetailsImpl;
+import com.testus.testus.domain.Member;
 import com.testus.testus.service.MemberServiceImpl;
-import com.testus.testus.service.OauthService;
-import jakarta.servlet.http.HttpServletRequest;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Slf4j
 @RequiredArgsConstructor
+@Tag(name = "01. 인증")
 public class MemberController {
 
     private final MemberServiceImpl memberService;
-    private final OauthService oauthService;
 
-    @GetMapping("")
-    public String test(){
-//        memberService.signUp(principal.getUserInfo().getName(), principal.getUserInfo().getNickname(), principal.getUserInfo().getAccessToken());
-        return "s";
+    @PostMapping("/oauth/login/{provider}")
+    @Operation(summary = "OAuth 로그인", description = "OAuth 로그인 API")
+    public ResponseEntity<ResponseDto<Member.MemberInfoDto>> oauthLogin(@PathVariable String provider,
+                                                                        @RequestParam String code,
+                                                                        @RequestParam String redirect_url,
+                                                                        HttpServletResponse response
+    ){
+        return ResponseEntity
+                .ok()
+                .body(memberService.oauthLogin(provider.toUpperCase(), code, redirect_url, response));
     }
 
-    @GetMapping("/oauth2/authorization/{provider}")
-    public ResponseEntity<?> oauthSignUp(HttpServletRequest request, HttpServletResponse response,  @PathVariable String provider, @RequestParam String redirect_url){
-//        oauthService.signUpOauth(request, response, provider, redirectUrl);
-        log.info("redirect URL : {} ", redirect_url);
-        return null;
+
+    @GetMapping("/member/status/check")
+    public ResponseEntity<ResponseDto<Member.MemberInfoDto>> statusCheck(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        return ResponseEntity
+                .ok()
+                .body(memberService.checkMemberStatus(userDetails.getMember()));
+    }
+
+    @PostMapping("/member/info")
+    @Operation(summary = "회원정보 업데이트", description = "회원정보 업데이트용 API")
+    public ResponseEntity<ResponseDto<Member.MemberInfoDto>> memberInfoUpdate(@RequestBody Member.MemberInfoUpdateDto memberInfoUpdateDto,
+                                                                              @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return ResponseEntity
+                .ok()
+                .body(memberService.updateInfo(memberInfoUpdateDto, userDetails.getMember()));
     }
 }

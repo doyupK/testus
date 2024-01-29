@@ -1,9 +1,6 @@
 package com.testus.testus.config.security;
 
-import com.testus.testus.service.CustomOAuth2UserService;
-import com.testus.testus.common.oauth.handler.OAuth2AuthenticationFailureHandler;
-import com.testus.testus.common.oauth.handler.OAuth2AuthenticationSuccessHandler;
-import com.testus.testus.util.HttpCookieOAuth2AuthorizationRequestRepository;
+//import com.testus.testus.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
@@ -24,10 +22,11 @@ import static org.springframework.security.web.util.matcher.AntPathRequestMatche
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final CustomOAuth2UserService customOAuth2UserService;
-    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
-    private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
-    private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
+//    private final CustomOAuth2UserService customOAuth2UserService;
+//    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+//    private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
+//    private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
+    private final JwtAuthenticationFilter authenticationFilter;
 
 //    @Value("${cors.allow.origin-pattern}")
 //    private String[] allowedOrigins;
@@ -49,17 +48,22 @@ public class SecurityConfig {
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers(antMatcher("/api/admin/**")).hasRole("ADMIN")
                         .requestMatchers(antMatcher("/api/user/**")).hasRole("USER")
-//                        .requestMatchers(antMatcher("/h2-console/**")).permitAll()
+                        .requestMatchers(antMatcher("/**")).permitAll()
+                        .requestMatchers("/swagger-ui/**").permitAll()
+                        .requestMatchers("/v3/api-docs/**").permitAll()
+                        .requestMatchers("/swagger-resources/**").permitAll()
                         .anyRequest().authenticated()
                 )
-                .sessionManagement(sessions -> sessions.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .oauth2Login(configure ->
-                        configure.authorizationEndpoint(config -> config.authorizationRequestRepository(httpCookieOAuth2AuthorizationRequestRepository))
-                                .userInfoEndpoint(config -> config.userService(customOAuth2UserService))
-                                .successHandler(oAuth2AuthenticationSuccessHandler)
-                                .failureHandler(oAuth2AuthenticationFailureHandler)
+                .sessionManagement(sessions -> sessions.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+//                .oauth2Login(configure ->
+//                        configure.authorizationEndpoint(config -> config.authorizationRequestRepository(httpCookieOAuth2AuthorizationRequestRepository))
+//                                .userInfoEndpoint(config -> config.userService(customOAuth2UserService))
+//                                .successHandler(oAuth2AuthenticationSuccessHandler)
+//                                .failureHandler(oAuth2AuthenticationFailureHandler)
+//
+//                );
 
-                );
+        http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
