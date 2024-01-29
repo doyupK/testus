@@ -43,12 +43,12 @@ public class MemberController {
     @Operation(summary = "OAuth 로그인", description = "OAuth 로그인 API")
     public ResponseEntity<ResponseDto<Member.MemberInfoDto>> oauthLogin(@PathVariable String provider,
                                                                         @RequestParam String code,
-                                                                        @RequestParam String redirect_url,
+                                                                        @RequestParam String redirectUrl,
                                                                         HttpServletResponse response
     ){
         return ResponseEntity
                 .ok()
-                .body(memberService.oauthLogin(provider.toUpperCase(), code, redirect_url, response));
+                .body(memberService.oauthLogin(provider.toUpperCase(), code, redirectUrl, response));
     }
 
 
@@ -59,7 +59,7 @@ public class MemberController {
                 .body(memberService.checkMemberStatusAndReturn(userDetails.getMember()));
     }
 
-    @PostMapping("/member/info")
+    @PutMapping("/member/info")
     @Operation(summary = "회원정보 업데이트", description = "회원정보 업데이트용 API")
     public ResponseEntity<ResponseDto<Member.MemberInfoDto>> memberInfoUpdate(@RequestBody Member.MemberInfoUpdateOrSignupDto memberInfoUpdateOrSignupDto,
                                                                               @AuthenticationPrincipal UserDetailsImpl userDetails){
