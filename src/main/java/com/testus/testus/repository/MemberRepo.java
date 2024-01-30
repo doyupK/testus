@@ -10,4 +10,6 @@ public interface MemberRepo extends JpaRepository<Member, Integer>, MemberRepoCu
 
     Optional<Member> findOneByUserEmail(String userEmail);
 
+    Optional<Member> findOneByUserEmailAndPhoneNumber(String userName, String phoneNumber);
+
 }

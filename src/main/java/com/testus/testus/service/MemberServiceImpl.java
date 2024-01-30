@@ -21,10 +21,11 @@ import java.util.Optional;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class MemberServiceImpl implements MemberService{
+public class MemberServiceImpl implements MemberService {
     private final MemberRepo memberRepo;
     private final JwtTokenUtil jwtTokenUtil;
     private final PasswordEncoder passwordEncoder;
+
     @Override
     public Member oauthSignUp(String name, String nickname, String email, String subId, SocialType type) {
         Member member = Member.builder()
@@ -48,7 +49,7 @@ public class MemberServiceImpl implements MemberService{
     @Override
     @Transactional
     public ResponseDto<Member.MemberInfoDto> updateInfo(Member.MemberInfoUpdateOrSignupDto memberInfoUpdateOrSignupDto, Member member) {
-        if (memberInfoUpdateOrSignupDto.getPassword() == null ){
+        if (memberInfoUpdateOrSignupDto.getPassword() == null) {
             memberRepo.updateInfo(memberInfoUpdateOrSignupDto, member.getUserSeq(), null);
         } else {
             memberRepo.updateInfo(memberInfoUpdateOrSignupDto, member.getUserSeq(), passwordEncoder.encode(memberInfoUpdateOrSignupDto.getPassword()));
@@ -85,7 +86,7 @@ public class MemberServiceImpl implements MemberService{
 
     @Transactional(readOnly = true)
     public ResponseDto<Member.MemberInfoDto> checkMemberStatusAndReturn(Member member) {
-        if (member.getStatus() == 'D'){ // 회원 정보 업데이트 필요
+        if (member.getStatus() == 'D') { // 회원 정보 업데이트 필요
             return new ResponseDto<>(Code.REQUIRED_UPDATE_MEMBER_INFO, member.convertMemberInfoResponse());
         } else {
             return new ResponseDto<>(Code.SUCCESS, member.convertMemberInfoResponse());
@@ -95,7 +96,7 @@ public class MemberServiceImpl implements MemberService{
     @Transactional
     public ResponseDto<Code> signup(Member.MemberInfoUpdateOrSignupDto dto) {
         Optional<Member> oneByUserEmail = memberRepo.findOneByUserEmail(dto.getUserEmail());
-        if (oneByUserEmail.isPresent()){
+        if (oneByUserEmail.isPresent()) {
             throw new CustomException(Code.ALREADY_MEMBER);
         } else {
             Member member = Member.builder()
@@ -117,11 +118,24 @@ public class MemberServiceImpl implements MemberService{
         Member member = memberRepo.findOneByUserEmail(dto.getUserEmail()).orElseThrow(
                 () -> new CustomException(Code.NOT_FOUND_USER)
         );
-        if (passwordEncoder.matches(dto.getPassword(), member.getUserPassword())){
+        if (passwordEncoder.matches(dto.getPassword(), member.getUserPassword())) {
             jwtTokenUtil.addJwtTokenInHeader(member, response);
             return checkMemberStatusAndReturn(member);
         } else {
             throw new CustomException(Code.PASSWORD_UNMATCHED);
         }
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseDto<Member.FindIdResponseDto> findId(Member.FindIdRequestDto dto) {
+        Member member = memberRepo.findOneByUserEmailAndPhoneNumber(dto.getUserName(), dto.getPhoneNumber())
+                .orElseThrow(
+                        () -> new CustomException(Code.NOT_FOUND_USER)
+                );
+
+        Member.FindIdResponseDto result =
+                Member.FindIdResponseDto.builder().userEmail(member.getUserEmail())
+                        .build();
+        return new ResponseDto<>(Code.SUCCESS, result);
     }
 }

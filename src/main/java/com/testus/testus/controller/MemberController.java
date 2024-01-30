@@ -53,6 +53,7 @@ public class MemberController {
 
 
     @GetMapping("/member/status/check")
+    @Operation(summary = "회원 정보 조회 ( 상태값 조회 )", description = "회원 정보 조회 ( 상태 값 조회 API )")
     public ResponseEntity<ResponseDto<Member.MemberInfoDto>> statusCheck(@AuthenticationPrincipal UserDetailsImpl userDetails){
         return ResponseEntity
                 .ok()
@@ -67,4 +68,13 @@ public class MemberController {
                 .ok()
                 .body(memberService.updateInfo(memberInfoUpdateOrSignupDto, userDetails.getMember()));
     }
+
+    @PutMapping("/member/find/id")
+    @Operation(summary = "아이디 찾기", description = "아이디 찾기 API")
+    public ResponseEntity<ResponseDto<Member.FindIdResponseDto>> findMemberID(@RequestBody Member.FindIdRequestDto dto){
+        return ResponseEntity
+                .ok()
+                .body(memberService.findId(dto));
+    }
+
 }

@@ -103,4 +103,16 @@ public class Member {
         private String userEmail;
         private String password;
     }
+
+    @Getter
+    @Builder
+    public static class FindIdRequestDto {
+        private String userName;
+        private String phoneNumber;
+    }
+    @Getter
+    @Builder
+    public static class FindIdResponseDto {
+        private String userEmail;
+    }
 }
