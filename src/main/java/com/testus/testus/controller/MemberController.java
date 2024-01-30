@@ -69,12 +69,20 @@ public class MemberController {
                 .body(memberService.updateInfo(memberInfoUpdateOrSignupDto, userDetails.getMember()));
     }
 
-    @PutMapping("/member/find/id")
+    @PostMapping("/find/member/id")
     @Operation(summary = "아이디 찾기", description = "아이디 찾기 API")
     public ResponseEntity<ResponseDto<Member.FindIdResponseDto>> findMemberID(@RequestBody Member.FindIdRequestDto dto){
         return ResponseEntity
                 .ok()
                 .body(memberService.findId(dto));
+    }
+
+    @PostMapping("/find/member/pw/mail")
+    @Operation(summary = "비밀번호 재설정 메일발송", description = "비밀번호 메일발송 API")
+    public ResponseEntity<ResponseDto<Code>> findMemberID(@RequestBody Member.FindPwRequestDto dto) throws Exception {
+        return ResponseEntity
+                .ok()
+                .body(memberService.resetPwMailSend(dto));
     }
 
 }

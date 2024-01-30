@@ -25,6 +25,7 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepo memberRepo;
     private final JwtTokenUtil jwtTokenUtil;
     private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
 
     @Override
     public Member oauthSignUp(String name, String nickname, String email, String subId, SocialType type) {
@@ -137,5 +138,14 @@ public class MemberServiceImpl implements MemberService {
                 Member.FindIdResponseDto.builder().userEmail(member.getUserEmail())
                         .build();
         return new ResponseDto<>(Code.SUCCESS, result);
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseDto<Code> resetPwMailSend(Member.FindPwRequestDto dto) throws Exception {
+        Member member = memberRepo.findOneByUserEmail(dto.getUserEmail()).orElseThrow(
+                () -> new CustomException(Code.NOT_FOUND_USER)
+        );
+        emailService.sendSimpleMessage(member.getUserEmail());
+        return new ResponseDto<>(Code.SUCCESS);
     }
 }

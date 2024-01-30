@@ -57,6 +57,7 @@ public class SecurityConfig {
                         .requestMatchers(antMatcher("/signup")).permitAll()
                         .requestMatchers(antMatcher("/login")).permitAll()
                         .requestMatchers(antMatcher("/oauth/**")).permitAll()
+                        .requestMatchers(antMatcher("/find/**")).permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/v3/api-docs/**").permitAll()
                         .requestMatchers("/swagger-resources/**").permitAll()
