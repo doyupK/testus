@@ -57,6 +57,7 @@ public class SecurityConfig {
                         .requestMatchers(antMatcher("/signup")).permitAll()
                         .requestMatchers(antMatcher("/login")).permitAll()
                         .requestMatchers(antMatcher("/oauth/**")).permitAll()
+                        .requestMatchers(antMatcher("/find/**")).permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/v3/api-docs/**").permitAll()
                         .requestMatchers("/swagger-resources/**").permitAll()
@@ -82,9 +83,9 @@ public class SecurityConfig {
         configuration.addAllowedOriginPattern("*");
         configuration.setAllowedOrigins(Arrays.asList(allowedOrigins));
         configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "PATCH", "DELETE"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "ACCESS_TOKEN","REFRESH_TOKEN", "Cache-Control", "Content-Type"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "refreshToken", "Cache-Control", "Content-Type"));
         configuration.setAllowCredentials(true);
-        configuration.setExposedHeaders(Arrays.asList("ACCESS_TOKEN","REFRESH_TOKEN", "Cache-Control", "Content-Type"));
+        configuration.setExposedHeaders(Arrays.asList("Authorization","refreshToken", "Cache-Control", "Content-Type"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

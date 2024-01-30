@@ -53,6 +53,12 @@ dependencies {
     annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 
 
+    //google mail
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-mail
+    implementation 'org.springframework.boot:spring-boot-starter-mail:3.2.1'
+    implementation group: 'org.glassfish.jaxb', name: 'jaxb-runtime', version: '2.3.2'
+
+
 }
 
 tasks.named('test') {

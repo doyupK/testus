@@ -3,10 +3,7 @@ package com.testus.testus.domain;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.Nullable;
 
@@ -72,7 +69,7 @@ public class Member {
     }
 
 
-    @Getter
+    @Getter @Setter
     @Builder
     public static class MemberInfoDto {
         private int userSeq;
@@ -84,7 +81,7 @@ public class Member {
         private char status;
     }
 
-    @Getter
+    @Getter @Setter
     @Builder
     public static class MemberInfoUpdateOrSignupDto {
         private String userName;
@@ -97,10 +94,31 @@ public class Member {
         private String password;
         private char marketingYn;
     }
-    @Getter
+    @Getter @Setter
     @Builder
     public static class LoginDto {
         private String userEmail;
         private String password;
+    }
+
+    @Getter @Setter
+    @Builder
+    public static class FindIdRequestDto {
+        private String userName;
+        private String phoneNumber;
+    }
+    @Getter @Setter
+    @Builder
+    public static class FindIdResponseDto {
+        private String userEmail;
+    }
+
+    @Getter
+    @Setter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class FindPwRequestDto {
+        private String userEmail;
     }
 }
