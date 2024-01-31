@@ -8,9 +8,6 @@ import com.testus.testus.enums.SocialType;
 import java.util.Optional;
 
 public interface MemberService {
-    Member oauthSignUp(String name, String nickname, String email, String subId, SocialType type);
-
-    Optional<Member> findMember(String id);
 
     Object updateInfo(Member.MemberInfoUpdateOrSignupDto memberInfoUpdateOrSignupDto, Member member);
 

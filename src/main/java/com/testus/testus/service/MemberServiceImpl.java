@@ -34,26 +34,6 @@ public class MemberServiceImpl implements MemberService {
     private final ObjectMapper objectMapper;
 
     @Override
-    public Member oauthSignUp(String name, String nickname, String email, String subId, SocialType type) {
-        Member member = Member.builder()
-                .providerType(type.getTypeName())
-                .userPassword("asdfasdf")
-                .userName(nickname)
-                .userEmail("test@gmail.com")
-                .providerSubject(subId)
-                .status('D')
-                .marketingYn('N')
-                .build();
-
-        return memberRepo.save(member);
-    }
-
-    @Override
-    public Optional<Member> findMember(String id) {
-        return memberRepo.findByProviderSubject(id);
-    }
-
-    @Override
     @Transactional
     public ResponseDto<Member.MemberInfoDto> updateInfo(Member.MemberInfoUpdateOrSignupDto memberInfoUpdateOrSignupDto, Member member) {
         if (memberInfoUpdateOrSignupDto.getPassword() == null) {
