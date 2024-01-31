@@ -166,6 +166,7 @@ public class MemberServiceImpl implements MemberService {
     public ResponseDto<Code> resetPw(Member.ResetPwRequestDto dto) {
         Object values = redisService.getValues("RESET::" + dto.getUuid());
         PwResetUuidDto pwResetUuidDto = objectMapper.convertValue(values, PwResetUuidDto.class);
+        log.info("password : {}", pwResetUuidDto.getUserEmail() == null ? "null" : pwResetUuidDto.getUserEmail());
         if (dto.getUserEmail().equals(pwResetUuidDto.getUserEmail())){
             Member target = memberRepo.findById(pwResetUuidDto.getUserSeq()).orElseThrow(
                     () -> new CustomException(Code.BAD_REQUEST)
