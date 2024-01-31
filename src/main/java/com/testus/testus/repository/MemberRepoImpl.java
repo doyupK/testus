@@ -11,8 +11,6 @@ public class MemberRepoImpl implements MemberRepoCustom {
 
     private final JPAQueryFactory queryFactory;
 
-
-
     @Override
     public void updateInfo(Member.MemberInfoUpdateOrSignupDto memberInfoUpdateOrSignupDto, int userSeq, String encodePassword) {
         if (encodePassword == null){
@@ -38,5 +36,13 @@ public class MemberRepoImpl implements MemberRepoCustom {
                     .execute();
         }
 
+    }
+
+    @Override
+    public void changePassword(int seq, String encode) {
+        queryFactory.update(member)
+                .set(member.userPassword, encode)
+                .where(member.userSeq.eq(seq))
+                .execute();
     }
 }

@@ -25,9 +25,9 @@ public class EmailConfig {
     private boolean startlls_required;
     @Value("${mail.smtp.socketFactory.fallback}")
     private boolean fallback;
-    @Value("${AdminMail.id}")
+    @Value("${gmail.id}")
     private String id;
-    @Value("${AdminMail.password}")
+    @Value("${gmail.password}")
     private String password;
  
     @Bean
