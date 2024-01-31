@@ -8,7 +8,6 @@ import com.testus.testus.common.response.exception.Code;
 import com.testus.testus.common.response.exception.CustomException;
 import com.testus.testus.domain.Member;
 import com.testus.testus.dto.member.PwResetUuidDto;
-import com.testus.testus.enums.SocialType;
 import com.testus.testus.repository.MemberRepo;
 import com.testus.testus.util.JwtTokenUtil;
 import jakarta.servlet.http.HttpServletResponse;
