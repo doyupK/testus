@@ -6,4 +6,6 @@ public interface MemberRepoCustom {
 
     void updateInfo(Member.MemberInfoUpdateOrSignupDto memberInfoUpdateOrSignupDto, int userSeq, String encodePassword);
 
+    void changePassword(int seq, String encode);
+
 }

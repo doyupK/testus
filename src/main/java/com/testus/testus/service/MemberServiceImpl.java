@@ -1,11 +1,13 @@
 package com.testus.testus.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.testus.testus.common.oauth.userInfo.OAuth2UserInfo;
 import com.testus.testus.common.oauth.userInfo.OAuth2UserInfoFactory;
 import com.testus.testus.common.response.ResponseDto;
 import com.testus.testus.common.response.exception.Code;
 import com.testus.testus.common.response.exception.CustomException;
 import com.testus.testus.domain.Member;
+import com.testus.testus.dto.member.PwResetUuidDto;
 import com.testus.testus.enums.SocialType;
 import com.testus.testus.repository.MemberRepo;
 import com.testus.testus.util.JwtTokenUtil;
@@ -16,7 +18,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.util.Optional;
+import java.util.Random;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -26,6 +31,8 @@ public class MemberServiceImpl implements MemberService {
     private final JwtTokenUtil jwtTokenUtil;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
+    private final RedisService redisService;
+    private final ObjectMapper objectMapper;
 
     @Override
     public Member oauthSignUp(String name, String nickname, String email, String subId, SocialType type) {
@@ -142,10 +149,33 @@ public class MemberServiceImpl implements MemberService {
 
     @Transactional(readOnly = true)
     public ResponseDto<Code> resetPwMailSend(Member.FindPwRequestDto dto) throws Exception {
+        UUID uuid = UUID.randomUUID();
+
         Member member = memberRepo.findOneByUserEmail(dto.getUserEmail()).orElseThrow(
                 () -> new CustomException(Code.NOT_FOUND_USER)
         );
-        emailService.sendSimpleMessage(member.getUserEmail());
+        emailService.sendSimpleMessage(member.getUserEmail(), uuid);
+        PwResetUuidDto pwResetUuidDto = PwResetUuidDto.builder()
+                .userSeq(member.getUserSeq())
+                .userEmail(member.getUserEmail())
+                .build();
+        redisService.setValues("RESET::"+uuid, pwResetUuidDto, Duration.ofMinutes(10));
+        return new ResponseDto<>(Code.SUCCESS);
+    }
+
+    @Transactional
+    public ResponseDto<Code> resetPw(Member.ResetPwRequestDto dto) {
+        Object values = redisService.getValues("RESET::" + dto.getUuid());
+        PwResetUuidDto pwResetUuidDto = objectMapper.convertValue(values, PwResetUuidDto.class);
+        if (dto.getUserEmail().equals(pwResetUuidDto.getUserEmail())){
+            Member target = memberRepo.findById(pwResetUuidDto.getUserSeq()).orElseThrow(
+                    () -> new CustomException(Code.BAD_REQUEST)
+            );
+            memberRepo.changePassword(target.getUserSeq(), passwordEncoder.encode(dto.getPassword()));
+            redisService.deleteValues("RESET::" + dto.getUuid());
+        } else {
+            throw new CustomException(Code.BAD_REQUEST);
+        }
         return new ResponseDto<>(Code.SUCCESS);
     }
 }

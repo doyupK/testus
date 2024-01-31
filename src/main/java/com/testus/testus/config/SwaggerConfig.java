@@ -1,4 +1,4 @@
-package com.testus.testus.config.swagger;
+package com.testus.testus.config;
 
 import com.testus.testus.common.response.exception.Code;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;

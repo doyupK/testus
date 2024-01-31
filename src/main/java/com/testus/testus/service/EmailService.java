@@ -1,5 +1,7 @@
 package com.testus.testus.service;
 
+import java.util.UUID;
+
 public interface EmailService {
-    String sendSimpleMessage(String to)throws Exception;
+    void sendSimpleMessage(String to, UUID uuid)throws Exception;
 }

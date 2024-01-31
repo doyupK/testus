@@ -121,4 +121,15 @@ public class Member {
     public static class FindPwRequestDto {
         private String userEmail;
     }
+
+    @Getter
+    @Setter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ResetPwRequestDto {
+        private String userEmail;
+        private String uuid;
+        private String password;
+    }
 }

@@ -85,4 +85,12 @@ public class MemberController {
                 .body(memberService.resetPwMailSend(dto));
     }
 
+    @PostMapping("/find/member/pw")
+    @Operation(summary = "비밀번호 재설정", description = "비밀번호 재설정 API")
+    public ResponseEntity<ResponseDto<Code>> findMemberID(@RequestBody Member.ResetPwRequestDto dto) {
+        return ResponseEntity
+                .ok()
+                .body(memberService.resetPw(dto));
+    }
+
 }
