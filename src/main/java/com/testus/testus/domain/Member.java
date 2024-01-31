@@ -46,6 +46,10 @@ public class Member {
 
     @Column
     private char marketingYn;
+    @Column
+    private char joinTestAlarm;
+    @Column
+    private char communityMyPostAlarm;
 
     @Column(nullable = false)
     private String role;
@@ -53,6 +57,8 @@ public class Member {
     @PrePersist
     public void prePersist(){
         this.marketingYn = 'N';
+        this.joinTestAlarm = 'Y';
+        this.communityMyPostAlarm = 'Y';
     }
 
 
@@ -64,6 +70,8 @@ public class Member {
                 .providerSubject(this.providerSubject)
                 .userEmail(this.userEmail)
                 .marketingYn(this.marketingYn)
+                .joinTestAlarm(this.joinTestAlarm)
+                .communityMyPostAlarm(this.communityMyPostAlarm)
                 .status(this.status)
                 .build();
     }
@@ -78,6 +86,8 @@ public class Member {
         private String providerSubject;
         private String userEmail;
         private char marketingYn;
+        private char joinTestAlarm;
+        private char communityMyPostAlarm;
         private char status;
     }
 

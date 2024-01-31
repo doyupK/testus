@@ -8,7 +8,6 @@ import com.testus.testus.common.response.exception.Code;
 import com.testus.testus.common.response.exception.CustomException;
 import com.testus.testus.domain.Member;
 import com.testus.testus.dto.member.PwResetUuidDto;
-import com.testus.testus.enums.SocialType;
 import com.testus.testus.repository.MemberRepo;
 import com.testus.testus.util.JwtTokenUtil;
 import jakarta.servlet.http.HttpServletResponse;
@@ -32,26 +31,6 @@ public class MemberServiceImpl implements MemberService {
     private final EmailService emailService;
     private final RedisService redisService;
     private final ObjectMapper objectMapper;
-
-    @Override
-    public Member oauthSignUp(String name, String nickname, String email, String subId, SocialType type) {
-        Member member = Member.builder()
-                .providerType(type.getTypeName())
-                .userPassword("asdfasdf")
-                .userName(nickname)
-                .userEmail("test@gmail.com")
-                .providerSubject(subId)
-                .status('D')
-                .marketingYn('N')
-                .build();
-
-        return memberRepo.save(member);
-    }
-
-    @Override
-    public Optional<Member> findMember(String id) {
-        return memberRepo.findByProviderSubject(id);
-    }
 
     @Override
     @Transactional
