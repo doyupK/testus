@@ -8,4 +8,8 @@ public interface MemberRepoCustom {
 
     void changePassword(int seq, String encode);
 
+    void updateJoinAlarm(char joinTestAlarm, int userSeq);
+
+    void reverseAlarmSetup(String field, Member member);
+
 }

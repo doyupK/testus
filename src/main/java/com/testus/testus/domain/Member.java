@@ -140,4 +140,10 @@ public class Member {
         private String uuid;
         private String password;
     }
+
+    @Getter @Setter
+    @Builder
+    public static class PasswordCheckDto {
+        private String password;
+    }
 }

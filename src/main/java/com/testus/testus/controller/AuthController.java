@@ -6,6 +6,7 @@ import com.testus.testus.domain.Member;
 import com.testus.testus.service.AuthService;
 import com.testus.testus.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +40,8 @@ public class AuthController {
 
     @PostMapping("/oauth/login/{provider}")
     @Operation(summary = "OAuth 로그인", description = "OAuth 로그인 API")
-    public ResponseEntity<ResponseDto<Member.MemberInfoDto>> oauthLogin(@PathVariable String provider,
+    public ResponseEntity<ResponseDto<Member.MemberInfoDto>> oauthLogin(@Parameter(example = "kakao, google")
+                                                                            @PathVariable String provider,
                                                                         @RequestParam String code,
                                                                         @RequestParam String redirectUrl,
                                                                         HttpServletResponse response

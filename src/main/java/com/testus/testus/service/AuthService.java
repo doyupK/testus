@@ -90,4 +90,20 @@ public class AuthService {
         }
     }
 
+    @Transactional(readOnly = true)
+    public ResponseDto<Code> checkPassword(Member.PasswordCheckDto dto, Member member) {
+        if (passwordEncoder.matches(dto.getPassword(),member.getUserPassword())){
+            return new ResponseDto<>(Code.SUCCESS);
+        } else {
+            throw new CustomException(Code.PASSWORD_UNMATCHED);
+        }
+    }
+
+
+    @Transactional
+    public ResponseDto<Code> reverseAlarm(String category, Member member) {
+
+        memberRepo.reverseAlarmSetup(category, member);
+        return new ResponseDto<>(Code.SUCCESS);
+    }
 }
