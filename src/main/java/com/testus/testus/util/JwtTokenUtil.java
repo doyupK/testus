@@ -1,7 +1,6 @@
 package com.testus.testus.util;
 
 import com.testus.testus.config.security.UserDetailsServiceImpl;
-import com.testus.testus.domain.Member;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -15,7 +14,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
-import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -31,7 +29,7 @@ public class JwtTokenUtil {
     // JWT Token 발급
     private static final String TOKEN_PREFIX = "Bearer ";
     private static final String ACCESS_TOKEN_HEADER = "Authorization";
-    private static final String REFRESH_TOKEN_HEADER = "REFRESH_TOKEN";
+    private static final String REFRESH_TOKEN_HEADER = "refreshToken";
     private final UserDetailsServiceImpl userDetailsService;
 
     public String getTokenFromHeader(HttpServletRequest request) {
@@ -74,15 +72,15 @@ public class JwtTokenUtil {
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + refreshTokenExpireSeconds));
 
-        claims.put("uuid", UUID.randomUUID().toString());
-//        claims.put("userId", userId);
+//        claims.put("uuid", UUID.randomUUID().toString());
+        claims.put("userSeq", userId);
 
 //        return TOKEN_PREFIX + Jwts.builder()
 //                .setHeaderParam("typ", "JWT")
 //                .setClaims(claims)
 //                .signWith(SignatureAlgorithm.HS256,  secretKey)
 //                .compact();
-        return Jwts.builder()
+        return TOKEN_PREFIX + Jwts.builder()
                 .setHeaderParam("typ", "JWT")
                 .setClaims(claims)
                 .signWith(SignatureAlgorithm.HS256,  secretKey)
@@ -111,11 +109,11 @@ public class JwtTokenUtil {
 
     /**
      * 헤더에 JWT Access Token, Refresh Token 추가
-     * @param member 회원 엔티티
+     * @param memberSeq 회원 시퀀스
      * @param response 응답 객체
      */
-    public void addJwtTokenInHeader(Member member, HttpServletResponse response) {
-        response.addHeader("Authorization",createToken(String.valueOf(member.getUserSeq())));
-        response.addHeader("refreshToken",createRefreshToken(String.valueOf(member.getUserSeq())));
+    public void addJwtTokenInHeader(int  memberSeq, HttpServletResponse response) {
+        response.addHeader("Authorization",createToken(String.valueOf(memberSeq)));
+        response.addHeader("refreshToken",createRefreshToken(String.valueOf(memberSeq)));
     }
 }

@@ -1,6 +1,7 @@
 package com.testus.testus.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.querydsl.jpa.impl.JPAUpdateClause;
 import com.testus.testus.domain.Member;
 import lombok.RequiredArgsConstructor;
 
@@ -45,4 +46,29 @@ public class MemberRepoImpl implements MemberRepoCustom {
                 .where(member.userSeq.eq(seq))
                 .execute();
     }
+
+    @Override
+    public void updateJoinAlarm(char joinTestAlarm, int userSeq) {
+        queryFactory.update(member)
+                .set(member.joinTestAlarm, joinTestAlarm == 'Y' ? 'N' : 'Y')
+                .where(member.userSeq.eq(userSeq))
+                .execute();
+    }
+
+    @Override
+    public void reverseAlarmSetup(String field, Member targetMember) {
+
+        JPAUpdateClause where = queryFactory.update(member)
+                .where(member.userSeq.eq(targetMember.getUserSeq()));
+
+        switch (field ) {
+            case "community" -> where.set(member.communityMyPostAlarm, targetMember.getCommunityMyPostAlarm() == 'Y' ? 'N' : 'Y');
+            case "join" -> where.set(member.joinTestAlarm, targetMember.getJoinTestAlarm() == 'Y' ? 'N' : 'Y');
+            case "marketing" -> where.set(member.marketingYn, targetMember.getMarketingYn() == 'Y' ? 'N' : 'Y');
+        }
+        where.execute();
+
+
+    }
+
 }

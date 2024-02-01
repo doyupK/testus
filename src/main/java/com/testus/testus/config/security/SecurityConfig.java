@@ -33,6 +33,7 @@ public class SecurityConfig {
 //    private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
 //    private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
     private final JwtAuthenticationFilter authenticationFilter;
+    private final ExceptionHandlerFilter exceptionHandlerFilter;
 
     @Value("${cors.allow.origin-pattern}")
     private String[] allowedOrigins;
@@ -57,7 +58,7 @@ public class SecurityConfig {
                         .requestMatchers(antMatcher("/signup")).permitAll()
                         .requestMatchers(antMatcher("/login")).permitAll()
                         .requestMatchers(antMatcher("/oauth/**")).permitAll()
-                        .requestMatchers(antMatcher("/find/**")).permitAll()
+                        .requestMatchers(antMatcher("/common/**")).permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/v3/api-docs/**").permitAll()
                         .requestMatchers("/swagger-resources/**").permitAll()
@@ -73,6 +74,7 @@ public class SecurityConfig {
 //                );
 
         http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(exceptionHandlerFilter, JwtAuthenticationFilter.class);
 
         return http.build();
     }
