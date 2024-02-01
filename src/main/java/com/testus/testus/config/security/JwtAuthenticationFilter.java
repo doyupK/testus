@@ -24,9 +24,6 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtTokenUtil jwtUtils;
-
-    private final RedisService redisService;
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException, AuthenticationException {
         //get jwt token from header
@@ -40,10 +37,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 if (refreshToken == null) {
                     throw new CustomException(Code.EXPIRED_ACCESS_JWT);
                 } else {
-//                    int userSeq = (int) e.getClaims().get("seq");
-
-//                    String findRefreshToken = (String) redisService.getValues(String.valueOf(userSeq));
-//                    if (findRefreshToken.equals(refreshToken)) {
                     Claims claims;
                     try {
                         claims = jwtUtils.validToken(refreshToken);
@@ -53,7 +46,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     String userId = (String) claims.get("userSeq");
                     jwtUtils.addJwtTokenInHeader(Integer.parseInt(userId), response);
                     throw new CustomException(Code.TOKEN_REFRESH);
-//                    }
                 }
             }
         }
