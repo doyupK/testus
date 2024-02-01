@@ -3,7 +3,6 @@ package com.testus.testus.repository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.querydsl.jpa.impl.JPAUpdateClause;
 import com.testus.testus.domain.Member;
-import com.testus.testus.domain.QMember;
 import lombok.RequiredArgsConstructor;
 
 import static com.testus.testus.domain.QMember.member;

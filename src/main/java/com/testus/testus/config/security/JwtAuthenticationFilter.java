@@ -2,11 +2,9 @@ package com.testus.testus.config.security;
 
 import com.testus.testus.common.response.exception.Code;
 import com.testus.testus.common.response.exception.CustomException;
-import com.testus.testus.service.RedisService;
 import com.testus.testus.util.JwtTokenUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

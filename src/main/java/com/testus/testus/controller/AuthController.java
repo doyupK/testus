@@ -4,7 +4,6 @@ import com.testus.testus.common.response.ResponseDto;
 import com.testus.testus.common.response.exception.Code;
 import com.testus.testus.domain.Member;
 import com.testus.testus.service.AuthService;
-import com.testus.testus.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;

@@ -1,6 +1,5 @@
 package com.testus.testus.config.security;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.testus.testus.common.response.ResponseDto;
 import com.testus.testus.common.response.exception.Code;

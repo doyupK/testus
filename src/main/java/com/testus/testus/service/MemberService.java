@@ -1,8 +1,6 @@
 package com.testus.testus.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.testus.testus.common.oauth.userInfo.OAuth2UserInfo;
-import com.testus.testus.common.oauth.userInfo.OAuth2UserInfoFactory;
 import com.testus.testus.common.response.ResponseDto;
 import com.testus.testus.common.response.exception.Code;
 import com.testus.testus.common.response.exception.CustomException;
@@ -10,7 +8,6 @@ import com.testus.testus.domain.Member;
 import com.testus.testus.dto.member.PwResetUuidDto;
 import com.testus.testus.repository.MemberRepo;
 import com.testus.testus.util.JwtTokenUtil;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
