@@ -67,7 +67,6 @@ public class Member {
                 .userSeq(this.userSeq)
                 .userName(this.userName)
                 .providerType(this.providerType)
-                .providerSubject(this.providerSubject)
                 .userEmail(this.userEmail)
                 .marketingYn(this.marketingYn)
                 .joinTestAlarm(this.joinTestAlarm)
@@ -83,7 +82,6 @@ public class Member {
         private int userSeq;
         private String userName;
         private String providerType;
-        private String providerSubject;
         private String userEmail;
         private char marketingYn;
         private char joinTestAlarm;

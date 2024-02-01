@@ -16,10 +16,10 @@ import org.springframework.context.annotation.Configuration;
 import java.util.ArrayList;
 import java.util.List;
 
-@OpenAPIDefinition(
-        info = @Info(title = "Testus",
-                description = "Testus API 명세",
-                version = "v1"))
+//@OpenAPIDefinition(
+//        info = @Info(title = "Testus",
+//                description = "Testus API 명세",
+//                version = "v1"))
 @RequiredArgsConstructor
 @Configuration
 public class SwaggerConfig {
@@ -37,7 +37,7 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI openAPI() {
         StringBuilder API_DESCRIPTION =
-                new StringBuilder(" <h1>Testus 서비스 !</h1> <br> " +
+                new StringBuilder(" <h1>Testus 서비스</h1> <br> " +
                         " <h3><B><status code 정의></B></h3> ");
         for (Code customErrorCode : Code.values()) {
             API_DESCRIPTION.append(customErrorCode.getCode()).append(" : ").append(customErrorCode.getMessage()).append("<br>");
@@ -56,7 +56,7 @@ public class SwaggerConfig {
 
 
         return new OpenAPI()
-                .info(new io.swagger.v3.oas.models.info.Info().title("Supercar Market Service")
+                .info(new io.swagger.v3.oas.models.info.Info().title("TESTUS API Docs")
                         .description(API_DESCRIPTION.toString())
                         .version("1.0"))
                 .servers(serverList)
@@ -66,15 +66,15 @@ public class SwaggerConfig {
                                 .in(SecurityScheme.In.HEADER)
                                 .name("Authorization")
                         )
-//                        .addSecuritySchemes("REFRESH_TOKEN", new SecurityScheme()
-//                                .type(SecurityScheme.Type.APIKEY)
-//                                .in(SecurityScheme.In.HEADER)
-//                                .name("")
-//                        )
+                        .addSecuritySchemes("refreshToken", new SecurityScheme()
+                                .type(SecurityScheme.Type.APIKEY)
+                                .in(SecurityScheme.In.HEADER)
+                                .name("refreshToken")
+                        )
                 )
                 .addSecurityItem(new SecurityRequirement()
                         .addList("Authorization")
-//                        .addList("REFRESH_TOKEN")
+                        .addList("refreshToken")
                 )
                 ;
 
