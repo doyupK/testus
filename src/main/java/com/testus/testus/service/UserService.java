@@ -4,9 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.testus.testus.common.response.ResponseDto;
 import com.testus.testus.common.response.exception.Code;
 import com.testus.testus.common.response.exception.CustomException;
-import com.testus.testus.domain.Member;
+import com.testus.testus.domain.User;
 import com.testus.testus.dto.member.PwResetUuidDto;
-import com.testus.testus.repository.MemberRepo;
+import com.testus.testus.repository.UserRepo;
 import com.testus.testus.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,8 +20,8 @@ import java.util.UUID;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class MemberService {
-    private final MemberRepo memberRepo;
+public class UserService {
+    private final UserRepo userRepo;
     private final JwtTokenUtil jwtTokenUtil;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
@@ -29,64 +29,64 @@ public class MemberService {
     private final ObjectMapper objectMapper;
 
     @Transactional
-    public ResponseDto<Member.MemberInfoDto> updateInfo(Member.MemberInfoUpdateOrSignupDto memberInfoUpdateOrSignupDto, Member member) {
+    public ResponseDto<User.MemberInfoDto> updateInfo(User.MemberInfoUpdateOrSignupDto memberInfoUpdateOrSignupDto, User user) {
         if (memberInfoUpdateOrSignupDto.getPassword() == null) {
-            memberRepo.updateInfo(memberInfoUpdateOrSignupDto, member.getUserSeq(), null);
+            userRepo.updateInfo(memberInfoUpdateOrSignupDto, user.getUserSeq(), null);
         } else {
-            memberRepo.updateInfo(memberInfoUpdateOrSignupDto, member.getUserSeq(), passwordEncoder.encode(memberInfoUpdateOrSignupDto.getPassword()));
+            userRepo.updateInfo(memberInfoUpdateOrSignupDto, user.getUserSeq(), passwordEncoder.encode(memberInfoUpdateOrSignupDto.getPassword()));
         }
         return new ResponseDto<>(Code.SUCCESS);
     }
 
     @Transactional(readOnly = true)
-    public ResponseDto<Member.MemberInfoDto> checkMemberStatusAndReturn(Member member) {
-        if (member.getStatus() == 'D') { // 회원 정보 업데이트 필요
-            return new ResponseDto<>(Code.REQUIRED_UPDATE_MEMBER_INFO, member.convertMemberInfoResponse());
+    public ResponseDto<User.MemberInfoDto> checkMemberStatusAndReturn(User user) {
+        if (user.getStatus() == 'D') { // 회원 정보 업데이트 필요
+            return new ResponseDto<>(Code.REQUIRED_UPDATE_MEMBER_INFO, user.convertMemberInfoResponse());
         } else {
-            return new ResponseDto<>(Code.SUCCESS, member.convertMemberInfoResponse());
+            return new ResponseDto<>(Code.SUCCESS, user.convertMemberInfoResponse());
         }
     }
 
 
     @Transactional(readOnly = true)
-    public ResponseDto<Member.FindIdResponseDto> findId(Member.FindIdRequestDto dto) {
-        Member member = memberRepo.findOneByUserEmailAndPhoneNumber(dto.getUserName(), dto.getPhoneNumber())
+    public ResponseDto<User.FindIdResponseDto> findId(User.FindIdRequestDto dto) {
+        User user = userRepo.findOneByUserEmailAndPhoneNumber(dto.getUserName(), dto.getPhoneNumber())
                 .orElseThrow(
                         () -> new CustomException(Code.NOT_FOUND_USER)
                 );
 
-        Member.FindIdResponseDto result =
-                Member.FindIdResponseDto.builder().userEmail(member.getUserEmail())
+        User.FindIdResponseDto result =
+                User.FindIdResponseDto.builder().userEmail(user.getUserEmail())
                         .build();
         return new ResponseDto<>(Code.SUCCESS, result);
     }
 
     @Transactional(readOnly = true)
-    public ResponseDto<Code> resetPwMailSend(Member.FindPwRequestDto dto) throws Exception {
+    public ResponseDto<Code> resetPwMailSend(User.FindPwRequestDto dto) throws Exception {
         UUID uuid = UUID.randomUUID();
 
-        Member member = memberRepo.findOneByUserEmail(dto.getUserEmail()).orElseThrow(
+        User user = userRepo.findOneByUserEmail(dto.getUserEmail()).orElseThrow(
                 () -> new CustomException(Code.NOT_FOUND_USER)
         );
-        emailService.sendSimpleMessage(member.getUserEmail(), uuid);
+        emailService.sendSimpleMessage(user.getUserEmail(), uuid);
         PwResetUuidDto pwResetUuidDto = PwResetUuidDto.builder()
-                .userSeq(member.getUserSeq())
-                .userEmail(member.getUserEmail())
+                .userSeq(user.getUserSeq())
+                .userEmail(user.getUserEmail())
                 .build();
         redisService.setValues("RESET::"+uuid, pwResetUuidDto, Duration.ofMinutes(10));
         return new ResponseDto<>(Code.SUCCESS);
     }
 
     @Transactional
-    public ResponseDto<Code> resetPw(Member.ResetPwRequestDto dto) {
+    public ResponseDto<Code> resetPw(User.ResetPwRequestDto dto) {
         Object values = redisService.getValues("RESET::" + dto.getUuid());
         PwResetUuidDto pwResetUuidDto = objectMapper.convertValue(values, PwResetUuidDto.class);
         log.info("password : {}", pwResetUuidDto.getUserEmail() == null ? "null" : pwResetUuidDto.getUserEmail());
         if (dto.getUserEmail().equals(pwResetUuidDto.getUserEmail())){
-            Member target = memberRepo.findById(pwResetUuidDto.getUserSeq()).orElseThrow(
+            User target = userRepo.findById(pwResetUuidDto.getUserSeq()).orElseThrow(
                     () -> new CustomException(Code.BAD_REQUEST)
             );
-            memberRepo.changePassword(target.getUserSeq(), passwordEncoder.encode(dto.getPassword()));
+            userRepo.changePassword(target.getUserSeq(), passwordEncoder.encode(dto.getPassword()));
             redisService.deleteValues("RESET::" + dto.getUuid());
         } else {
             throw new CustomException(Code.BAD_REQUEST);
@@ -96,7 +96,7 @@ public class MemberService {
 
     @Transactional(readOnly = true)
     public ResponseDto<Code> checkEmail(String email) {
-        if (memberRepo.findOneByUserEmail(email).isPresent()){
+        if (userRepo.findOneByUserEmail(email).isPresent()){
             throw new CustomException(Code.EMAIL_DUPLICATE);
         } else {
             return new ResponseDto<>(Code.SUCCESS);

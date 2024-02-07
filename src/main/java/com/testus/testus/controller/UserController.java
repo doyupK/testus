@@ -3,9 +3,9 @@ package com.testus.testus.controller;
 import com.testus.testus.common.response.ResponseDto;
 import com.testus.testus.common.response.exception.Code;
 import com.testus.testus.config.security.UserDetailsImpl;
-import com.testus.testus.domain.Member;
+import com.testus.testus.domain.User;
 import com.testus.testus.service.AuthService;
-import com.testus.testus.service.MemberService;
+import com.testus.testus.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,35 +19,35 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RequiredArgsConstructor
 @Tag(name = "02. 회원 관련")
-public class MemberController {
+public class UserController {
 
-    private final MemberService memberService;
+    private final UserService userService;
     private final AuthService authService;
 
     @GetMapping("/member/status/check")
     @Operation(summary = "회원 정보 조회 ( 상태값 조회 )", description = "회원 정보 조회 ( 상태 값 조회 API )")
-    public ResponseEntity<ResponseDto<Member.MemberInfoDto>> statusCheck(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<ResponseDto<User.MemberInfoDto>> statusCheck(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseEntity
                 .ok()
-                .body(memberService.checkMemberStatusAndReturn(userDetails.getMember()));
+                .body(userService.checkMemberStatusAndReturn(userDetails.getUser()));
     }
 
     @PutMapping("/member/info")
     @Operation(summary = "회원정보 업데이트", description = "회원정보 업데이트용 API")
-    public ResponseEntity<ResponseDto<Member.MemberInfoDto>> memberInfoUpdate(@RequestBody Member.MemberInfoUpdateOrSignupDto memberInfoUpdateOrSignupDto,
-                                                                              @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<ResponseDto<User.MemberInfoDto>> memberInfoUpdate(@RequestBody User.MemberInfoUpdateOrSignupDto memberInfoUpdateOrSignupDto,
+                                                                            @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseEntity
                 .ok()
-                .body(memberService.updateInfo(memberInfoUpdateOrSignupDto, userDetails.getMember()));
+                .body(userService.updateInfo(memberInfoUpdateOrSignupDto, userDetails.getUser()));
     }
 
     @PostMapping("/member/check/pw")
     @Operation(summary = "비밀번호 확인", description = "비밀번호 확인 API")
-    public ResponseEntity<ResponseDto<Code>> passwordCheck(@RequestBody Member.PasswordCheckDto dto,
+    public ResponseEntity<ResponseDto<Code>> passwordCheck(@RequestBody User.PasswordCheckDto dto,
                                                            @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseEntity
                 .ok()
-                .body(authService.checkPassword(dto, userDetails.getMember()));
+                .body(authService.checkPassword(dto, userDetails.getUser()));
     }
 
 
@@ -58,7 +58,7 @@ public class MemberController {
                                                                         @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseEntity
                 .ok()
-                .body(authService.reverseAlarm(category, userDetails.getMember()));
+                .body(authService.reverseAlarm(category, userDetails.getUser()));
     }
 
 

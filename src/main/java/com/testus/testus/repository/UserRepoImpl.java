@@ -2,18 +2,18 @@ package com.testus.testus.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.querydsl.jpa.impl.JPAUpdateClause;
-import com.testus.testus.domain.Member;
+import com.testus.testus.domain.User;
 import lombok.RequiredArgsConstructor;
 
 import static com.testus.testus.domain.QMember.member;
 
 @RequiredArgsConstructor
-public class MemberRepoImpl implements MemberRepoCustom {
+public class UserRepoImpl implements UserRepoCustom {
 
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public void updateInfo(Member.MemberInfoUpdateOrSignupDto memberInfoUpdateOrSignupDto, int userSeq, String encodePassword) {
+    public void updateInfo(User.MemberInfoUpdateOrSignupDto memberInfoUpdateOrSignupDto, int userSeq, String encodePassword) {
         if (encodePassword == null){
             queryFactory.update(member)
                     .set(member.userName, memberInfoUpdateOrSignupDto.getUserName())
@@ -56,15 +56,15 @@ public class MemberRepoImpl implements MemberRepoCustom {
     }
 
     @Override
-    public void reverseAlarmSetup(String field, Member targetMember) {
+    public void reverseAlarmSetup(String field, User targetUser) {
 
         JPAUpdateClause where = queryFactory.update(member)
-                .where(member.userSeq.eq(targetMember.getUserSeq()));
+                .where(member.userSeq.eq(targetUser.getUserSeq()));
 
         switch (field ) {
-            case "community" -> where.set(member.communityMyPostAlarm, targetMember.getCommunityMyPostAlarm() == 'Y' ? 'N' : 'Y');
-            case "join" -> where.set(member.joinTestAlarm, targetMember.getJoinTestAlarm() == 'Y' ? 'N' : 'Y');
-            case "marketing" -> where.set(member.marketingYn, targetMember.getMarketingYn() == 'Y' ? 'N' : 'Y');
+            case "community" -> where.set(member.communityMyPostAlarm, targetUser.getCommunityMyPostAlarm() == 'Y' ? 'N' : 'Y');
+            case "join" -> where.set(member.joinTestAlarm, targetUser.getJoinTestAlarm() == 'Y' ? 'N' : 'Y');
+            case "marketing" -> where.set(member.marketingYn, targetUser.getMarketingYn() == 'Y' ? 'N' : 'Y');
         }
         where.execute();
 

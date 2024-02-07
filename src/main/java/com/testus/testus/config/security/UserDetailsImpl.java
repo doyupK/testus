@@ -1,6 +1,6 @@
 package com.testus.testus.config.security;
 
-import com.testus.testus.domain.Member;
+import com.testus.testus.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,23 +10,23 @@ import java.util.Collection;
 
 @RequiredArgsConstructor
 public class UserDetailsImpl implements UserDetails {
-    private final Member member;
+    private final User user;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return new ArrayList<>();
     }
-    public Member getMember(){
-        return member;
+    public User getUser(){
+        return user;
     }
 
     @Override
     public String getPassword() {
-        return member.getUserPassword();
+        return user.getUserPassword();
     }
 
     @Override
     public String getUsername() {
-        return member.getUserName();
+        return user.getUserName();
     }
 
     @Override
