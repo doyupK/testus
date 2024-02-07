@@ -6,8 +6,8 @@ import com.testus.testus.common.oauth.userInfo.OAuth2UserInfoFactory;
 import com.testus.testus.common.response.ResponseDto;
 import com.testus.testus.common.response.exception.Code;
 import com.testus.testus.common.response.exception.CustomException;
-import com.testus.testus.domain.Member;
-import com.testus.testus.repository.MemberRepo;
+import com.testus.testus.domain.User;
+import com.testus.testus.repository.UserRepo;
 import com.testus.testus.util.JwtTokenUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +20,8 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-    private final MemberRepo memberRepo;
-    private final MemberService memberService;
+    private final UserRepo userRepo;
+    private final UserService userService;
     private final JwtTokenUtil jwtTokenUtil;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
@@ -31,18 +31,18 @@ public class AuthService {
 
 
     @Transactional
-    public ResponseDto<Member.MemberInfoDto> oauthLogin(String provider, String code, String redirectUrl, HttpServletResponse response) {
+    public ResponseDto<User.MemberInfoDto> oauthLogin(String provider, String code, String redirectUrl, HttpServletResponse response) {
 
         OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(provider, code, redirectUrl);
-        Optional<Member> findUser = memberRepo.findByProviderSubject(userInfo.getId());
+        Optional<User> findUser = userRepo.findByProviderSubject(userInfo.getId());
 
-        Member member;
+        User user;
 
         if (findUser.isPresent()) { // 기존 회원
-            member = findUser.get();
-            jwtTokenUtil.addJwtTokenInHeader(member.getUserSeq(), response);
+            user = findUser.get();
+            jwtTokenUtil.addJwtTokenInHeader(user.getUserSeq(), response);
         } else { // 신규 회원
-            member = Member.builder()
+            user = User.builder()
                     .userName(userInfo.getName())
                     .userEmail(userInfo.getEmail())
                     .userPassword(null)
@@ -51,19 +51,19 @@ public class AuthService {
                     .role("ROLE_USER")
                     .status('D')
                     .build();
-            member = memberRepo.save(member);
+            user = userRepo.save(user);
         }
-        return memberService.checkMemberStatusAndReturn(member);
+        return userService.checkMemberStatusAndReturn(user);
     }
 
 
     @Transactional
-    public ResponseDto<Code> signup(Member.MemberInfoUpdateOrSignupDto dto) {
-        Optional<Member> oneByUserEmail = memberRepo.findOneByUserEmail(dto.getUserEmail());
+    public ResponseDto<Code> signup(User.MemberInfoUpdateOrSignupDto dto) {
+        Optional<User> oneByUserEmail = userRepo.findOneByUserEmail(dto.getUserEmail());
         if (oneByUserEmail.isPresent()) {
             throw new CustomException(Code.ALREADY_MEMBER);
         } else {
-            Member member = Member.builder()
+            User user = User.builder()
                     .providerType("TESTUS")
                     .userPassword(passwordEncoder.encode(dto.getPassword()))
                     .userName(dto.getUserName())
@@ -72,27 +72,27 @@ public class AuthService {
                     .role("ROLE_USER")
                     .marketingYn(dto.getMarketingYn())
                     .build();
-            memberRepo.save(member);
+            userRepo.save(user);
             return new ResponseDto<>(Code.SUCCESS);
         }
     }
 
     @Transactional
-    public ResponseDto<Member.MemberInfoDto> login(Member.LoginDto dto, HttpServletResponse response) {
-        Member member = memberRepo.findOneByUserEmail(dto.getUserEmail()).orElseThrow(
+    public ResponseDto<User.MemberInfoDto> login(User.LoginDto dto, HttpServletResponse response) {
+        User user = userRepo.findOneByUserEmail(dto.getUserEmail()).orElseThrow(
                 () -> new CustomException(Code.NOT_FOUND_USER)
         );
-        if (passwordEncoder.matches(dto.getPassword(), member.getUserPassword())) {
-            jwtTokenUtil.addJwtTokenInHeader(member.getUserSeq(), response);
-            return memberService.checkMemberStatusAndReturn(member);
+        if (passwordEncoder.matches(dto.getPassword(), user.getUserPassword())) {
+            jwtTokenUtil.addJwtTokenInHeader(user.getUserSeq(), response);
+            return userService.checkMemberStatusAndReturn(user);
         } else {
             throw new CustomException(Code.PASSWORD_UNMATCHED);
         }
     }
 
     @Transactional(readOnly = true)
-    public ResponseDto<Code> checkPassword(Member.PasswordCheckDto dto, Member member) {
-        if (passwordEncoder.matches(dto.getPassword(),member.getUserPassword())){
+    public ResponseDto<Code> checkPassword(User.PasswordCheckDto dto, User user) {
+        if (passwordEncoder.matches(dto.getPassword(), user.getUserPassword())){
             return new ResponseDto<>(Code.SUCCESS);
         } else {
             throw new CustomException(Code.PASSWORD_UNMATCHED);
@@ -101,9 +101,9 @@ public class AuthService {
 
 
     @Transactional
-    public ResponseDto<Code> reverseAlarm(String category, Member member) {
+    public ResponseDto<Code> reverseAlarm(String category, User user) {
 
-        memberRepo.reverseAlarmSetup(category, member);
+        userRepo.reverseAlarmSetup(category, user);
         return new ResponseDto<>(Code.SUCCESS);
     }
 }

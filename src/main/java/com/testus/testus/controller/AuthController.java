@@ -2,7 +2,7 @@ package com.testus.testus.controller;
 
 import com.testus.testus.common.response.ResponseDto;
 import com.testus.testus.common.response.exception.Code;
-import com.testus.testus.domain.Member;
+import com.testus.testus.domain.User;
 import com.testus.testus.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -23,15 +23,15 @@ public class AuthController {
 
     @PostMapping("/signup")
     @Operation(summary = "일반 회원가입", description = "일반 회원가입 API")
-    public ResponseEntity<ResponseDto<Code>> signUp(@RequestBody Member.MemberInfoUpdateOrSignupDto dto){
+    public ResponseEntity<ResponseDto<Code>> signUp(@RequestBody User.MemberInfoUpdateOrSignupDto dto){
         return ResponseEntity
                 .ok()
                 .body(authService.signup(dto));
     }
     @PostMapping("/login")
     @Operation(summary = "일반 로그인", description = "일반 로그인 API")
-    public ResponseEntity<ResponseDto<Member.MemberInfoDto>> login(@RequestBody Member.LoginDto dto,
-                                                                   HttpServletResponse response){
+    public ResponseEntity<ResponseDto<User.MemberInfoDto>> login(@RequestBody User.LoginDto dto,
+                                                                 HttpServletResponse response){
         return ResponseEntity
                 .ok()
                 .body(authService.login(dto, response));
@@ -39,11 +39,11 @@ public class AuthController {
 
     @PostMapping("/oauth/login/{provider}")
     @Operation(summary = "OAuth 로그인", description = "OAuth 로그인 API")
-    public ResponseEntity<ResponseDto<Member.MemberInfoDto>> oauthLogin(@Parameter(example = "kakao, google")
+    public ResponseEntity<ResponseDto<User.MemberInfoDto>> oauthLogin(@Parameter(example = "kakao, google")
                                                                             @PathVariable String provider,
-                                                                        @RequestParam String code,
-                                                                        @RequestParam String redirectUrl,
-                                                                        HttpServletResponse response
+                                                                      @RequestParam String code,
+                                                                      @RequestParam String redirectUrl,
+                                                                      HttpServletResponse response
     ){
         return ResponseEntity
                 .ok()
