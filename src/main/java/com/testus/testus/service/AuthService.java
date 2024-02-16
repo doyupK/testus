@@ -11,6 +11,7 @@ import com.testus.testus.repository.UserRepo;
 import com.testus.testus.util.JwtTokenUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +20,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthService {
     private final UserRepo userRepo;
     private final UserService userService;
@@ -53,6 +55,7 @@ public class AuthService {
                     .build();
             user = userRepo.save(user);
         }
+        log.info("success : {} ", user.getUserName());
         return userService.checkMemberStatusAndReturn(user);
     }
 
