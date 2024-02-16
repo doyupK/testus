@@ -1,25 +1,20 @@
 package com.testus.testus.config.security;
 
 //import com.testus.testus.service.CustomOAuth2UserService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.Arrays;
 
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
@@ -59,6 +54,7 @@ public class SecurityConfig {
                         .requestMatchers(antMatcher("/login")).permitAll()
                         .requestMatchers(antMatcher("/oauth/**")).permitAll()
                         .requestMatchers(antMatcher("/common/**")).permitAll()
+                        .requestMatchers(antMatcher("/dev/**")).permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/v3/api-docs/**").permitAll()
                         .requestMatchers("/swagger-resources/**").permitAll()
@@ -79,17 +75,19 @@ public class SecurityConfig {
         return http.build();
     }
 
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOriginPattern("*");
-        configuration.setAllowedOrigins(Arrays.asList(allowedOrigins));
-        configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "PATCH", "DELETE"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "refreshToken", "Cache-Control", "Content-Type"));
-        configuration.setAllowCredentials(true);
-        configuration.setExposedHeaders(Arrays.asList("Authorization","refreshToken", "Cache-Control", "Content-Type"));
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
+//    @Bean
+//    CorsConfigurationSource corsConfigurationSource() {
+//        Arrays.asList(allowedOrigins).forEach(System.out::println);
+//        CorsConfiguration configuration = new CorsConfiguration();
+//        configuration.addAllowedOriginPattern("*");
+//        configuration.setAllowedOrigins(Arrays.asList(allowedOrigins));
+////        configuration.setAllowedOrigins(Collections.singletonList("*"));
+//        configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "PATCH", "DELETE", "*"));
+//        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Refreshtoken", "Cache-Control", "Content-Type", "Accept", "*"));
+//        configuration.setAllowCredentials(true);
+//        configuration.setExposedHeaders(Arrays.asList("Authorization","Refreshtoken", "Cache-Control", "Content-Type", "*"));
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", configuration);
+//        return source;
+//    }
 }

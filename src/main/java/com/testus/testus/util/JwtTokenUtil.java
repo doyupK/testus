@@ -114,6 +114,6 @@ public class JwtTokenUtil {
      */
     public void addJwtTokenInHeader(int  memberSeq, HttpServletResponse response) {
         response.addHeader("Authorization",createToken(String.valueOf(memberSeq)));
-        response.addHeader("refreshToken",createRefreshToken(String.valueOf(memberSeq)));
+        response.addHeader("Refreshtoken",createRefreshToken(String.valueOf(memberSeq)));
     }
 }
