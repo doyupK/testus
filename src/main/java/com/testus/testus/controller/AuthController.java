@@ -23,7 +23,7 @@ public class AuthController {
 
     @PostMapping("/signup")
     @Operation(summary = "일반 회원가입", description = "일반 회원가입 API")
-    public ResponseEntity<ResponseDto<Code>> signUp(@RequestBody User.MemberInfoUpdateOrSignupDto dto){
+    public ResponseEntity<ResponseDto<Code>> signUp(@RequestBody User.MemberInfoSignUpDto dto){
         return ResponseEntity
                 .ok()
                 .body(authService.signup(dto));

@@ -91,7 +91,7 @@ public class User {
 
     @Getter @Setter
     @Builder
-    public static class MemberInfoUpdateOrSignupDto {
+    public static class MemberInfoUpdateDto {
         private String userName;
         private String phoneNumber;
         @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -102,6 +102,21 @@ public class User {
         private String password;
         private char marketingYn;
     }
+
+    @Getter @Setter
+    @Builder
+    public static class MemberInfoSignUpDto {
+        private String userName;
+        private String phoneNumber;
+        @DateTimeFormat(pattern = "yyyy-MM-dd")
+        private LocalDate birthDay;
+        private String gender;
+        private String userEmail;
+        @Nullable
+        private String password;
+        private char marketingYn;
+    }
+
     @Getter @Setter
     @Builder
     public static class LoginDto {

@@ -50,4 +50,13 @@ public class Test {
     private LocalDate createDate;
 
 
+
+    @Getter
+    @Setter
+    @Builder
+    public static class PostDataResponse {
+        private String imgSrc;
+        private String url;
+    }
+
 }

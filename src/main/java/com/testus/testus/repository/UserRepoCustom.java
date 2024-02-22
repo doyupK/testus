@@ -4,7 +4,7 @@ import com.testus.testus.domain.User;
 
 public interface UserRepoCustom {
 
-    void updateInfo(User.MemberInfoUpdateOrSignupDto memberInfoUpdateOrSignupDto, int userSeq, String encodePassword);
+    void updateInfo(User.MemberInfoUpdateDto memberInfoUpdateOrSignupDto, int userSeq, String encodePassword);
 
     void changePassword(int seq, String encode);
 

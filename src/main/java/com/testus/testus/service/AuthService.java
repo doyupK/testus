@@ -42,7 +42,6 @@ public class AuthService {
 
         if (findUser.isPresent()) { // 기존 회원
             user = findUser.get();
-            jwtTokenUtil.addJwtTokenInHeader(user.getUserSeq(), response);
         } else { // 신규 회원
             user = User.builder()
                     .userName(userInfo.getName())
@@ -54,14 +53,15 @@ public class AuthService {
                     .status('D')
                     .build();
             user = userRepo.save(user);
+
         }
-        log.info("success : {} ", user.getUserName());
+        jwtTokenUtil.addJwtTokenInHeader(user.getUserSeq(), response);
         return userService.checkMemberStatusAndReturn(user);
     }
 
 
     @Transactional
-    public ResponseDto<Code> signup(User.MemberInfoUpdateOrSignupDto dto) {
+    public ResponseDto<Code> signup(User.MemberInfoSignUpDto dto) {
         Optional<User> oneByUserEmail = userRepo.findOneByUserEmail(dto.getUserEmail());
         if (oneByUserEmail.isPresent()) {
             throw new CustomException(Code.ALREADY_MEMBER);

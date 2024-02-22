@@ -29,7 +29,7 @@ public class UserService {
     private final ObjectMapper objectMapper;
 
     @Transactional
-    public ResponseDto<User.MemberInfoDto> updateInfo(User.MemberInfoUpdateOrSignupDto memberInfoUpdateOrSignupDto, User user) {
+    public ResponseDto<User.MemberInfoDto> updateInfo(User.MemberInfoUpdateDto memberInfoUpdateOrSignupDto, User user) {
         if (memberInfoUpdateOrSignupDto.getPassword() == null) {
             userRepo.updateInfo(memberInfoUpdateOrSignupDto, user.getUserSeq(), null);
         } else {

@@ -34,7 +34,7 @@ public class UserController {
 
     @PutMapping("/member/info")
     @Operation(summary = "회원정보 업데이트", description = "회원정보 업데이트용 API")
-    public ResponseEntity<ResponseDto<User.MemberInfoDto>> memberInfoUpdate(@RequestBody User.MemberInfoUpdateOrSignupDto memberInfoUpdateOrSignupDto,
+    public ResponseEntity<ResponseDto<User.MemberInfoDto>> memberInfoUpdate(@RequestBody User.MemberInfoUpdateDto memberInfoUpdateOrSignupDto,
                                                                             @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseEntity
                 .ok()
