@@ -29,7 +29,7 @@ public class UserService {
     private final ObjectMapper objectMapper;
 
     @Transactional
-    public ResponseDto<User.MemberInfoDto> updateInfo(User.MemberInfoUpdateOrSignupDto memberInfoUpdateOrSignupDto, User user) {
+    public ResponseDto<User.MemberInfoDto> updateInfo(User.MemberInfoUpdateDto memberInfoUpdateOrSignupDto, User user) {
         if (memberInfoUpdateOrSignupDto.getPassword() == null) {
             userRepo.updateInfo(memberInfoUpdateOrSignupDto, user.getUserSeq(), null);
         } else {
@@ -50,13 +50,13 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public ResponseDto<User.FindIdResponseDto> findId(User.FindIdRequestDto dto) {
-        User user = userRepo.findOneByUserEmailAndPhoneNumber(dto.getUserName(), dto.getPhoneNumber())
+        User user = userRepo.findOneByUserNameAndPhoneNumber(dto.getUserName(), dto.getPhoneNumber())
                 .orElseThrow(
                         () -> new CustomException(Code.NOT_FOUND_USER)
                 );
 
         User.FindIdResponseDto result =
-                User.FindIdResponseDto.builder().userEmail(user.getUserEmail())
+                User.FindIdResponseDto.builder().userEmail(user.getUserEmail()).provider(user.getProviderType())
                         .build();
         return new ResponseDto<>(Code.SUCCESS, result);
     }

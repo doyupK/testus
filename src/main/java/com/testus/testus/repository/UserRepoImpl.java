@@ -13,7 +13,7 @@ public class UserRepoImpl implements UserRepoCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public void updateInfo(User.MemberInfoUpdateOrSignupDto memberInfoUpdateOrSignupDto, int userSeq, String encodePassword) {
+    public void updateInfo(User.MemberInfoUpdateDto memberInfoUpdateOrSignupDto, int userSeq, String encodePassword) {
         if (encodePassword == null){
             queryFactory.update(user)
                     .set(user.userName, memberInfoUpdateOrSignupDto.getUserName())
