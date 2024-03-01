@@ -50,13 +50,13 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public ResponseDto<User.FindIdResponseDto> findId(User.FindIdRequestDto dto) {
-        User user = userRepo.findOneByUserEmailAndPhoneNumber(dto.getUserName(), dto.getPhoneNumber())
+        User user = userRepo.findOneByUserNameAndPhoneNumber(dto.getUserName(), dto.getPhoneNumber())
                 .orElseThrow(
                         () -> new CustomException(Code.NOT_FOUND_USER)
                 );
 
         User.FindIdResponseDto result =
-                User.FindIdResponseDto.builder().userEmail(user.getUserEmail())
+                User.FindIdResponseDto.builder().userEmail(user.getUserEmail()).provider(user.getProviderType())
                         .build();
         return new ResponseDto<>(Code.SUCCESS, result);
     }

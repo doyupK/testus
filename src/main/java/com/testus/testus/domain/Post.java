@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @Getter @Setter @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Test {
+public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int seq;
@@ -22,6 +22,7 @@ public class Test {
     @JoinColumn(name = "user_seq")
     private User createUser;
     @Column
+    @Enumerated(EnumType.STRING)
     private TestCategory category;
     @Column
     private int joinLimit;

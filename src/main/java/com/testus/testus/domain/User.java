@@ -133,6 +133,7 @@ public class User {
     @Getter @Setter
     @Builder
     public static class FindIdResponseDto {
+        private String provider;
         private String userEmail;
     }
 

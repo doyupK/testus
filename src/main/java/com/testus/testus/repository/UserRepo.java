@@ -12,4 +12,6 @@ public interface UserRepo extends JpaRepository<User, Integer>, UserRepoCustom {
 
     Optional<User> findOneByUserEmailAndPhoneNumber(String userName, String phoneNumber);
 
+    Optional<User> findOneByUserNameAndPhoneNumber(String userName, String phoneNumber);
+
 }
