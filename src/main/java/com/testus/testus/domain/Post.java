@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.Duration;
 import java.time.LocalDate;
 
 @Entity
@@ -26,6 +27,8 @@ public class Post {
     private TestCategory category;
     @Column
     private int joinLimit;
+    @Column
+    private int currentJoinCount;
     @Column
     private String title;
     @Column
@@ -58,6 +61,25 @@ public class Post {
     public static class PostDataResponse {
         private String imgSrc;
         private String url;
+    }
+
+    @Getter
+    @Setter
+    @Builder
+    public static class MyPostDataResponse {
+        private int seq;
+        private String thumbnailUrl;
+        private String title;
+        private int currentJoinCount;
+        private long remainingDay;
+
+        public MyPostDataResponse(int seq, String thumbnailUrl, String title, int currentJoinCount, LocalDate endDate) {
+            this.seq = seq;
+            this.thumbnailUrl = thumbnailUrl;
+            this.title = title;
+            this.currentJoinCount = currentJoinCount;
+            this.remainingDay = Duration.between(LocalDate.now(), endDate).toDays();
+        }
     }
 
 }

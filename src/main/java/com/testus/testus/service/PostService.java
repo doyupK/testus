@@ -2,6 +2,8 @@ package com.testus.testus.service;
 
 import com.testus.testus.common.response.ResponseDto;
 import com.testus.testus.common.response.exception.Code;
+import com.testus.testus.domain.Post;
+import com.testus.testus.domain.User;
 import com.testus.testus.dto.post.PostThumbnailDto;
 import com.testus.testus.repository.PostRepo;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,12 @@ public class PostService {
     @Transactional(readOnly = true)
     public ResponseDto<List<PostThumbnailDto>> getPopularPost(String category) {
         return new ResponseDto<>(Code.SUCCESS, postRepo.getPopularPost(category));
+
+    }
+
+    @Transactional(readOnly = true)
+    public List<Post.MyPostDataResponse> getMyTest(User user) {
+        return postRepo.getMyTest(user);
 
     }
 }

@@ -3,6 +3,7 @@ package com.testus.testus.controller;
 import com.testus.testus.common.response.ResponseDto;
 import com.testus.testus.common.response.exception.Code;
 import com.testus.testus.config.security.UserDetailsImpl;
+import com.testus.testus.domain.Post;
 import com.testus.testus.domain.User;
 import com.testus.testus.service.AuthService;
 import com.testus.testus.service.UserService;
@@ -14,6 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -61,5 +64,23 @@ public class UserController {
                 .body(authService.reverseAlarm(category, userDetails.getUser()));
     }
 
+    @GetMapping("/member/my/create/post")
+    @Operation(summary = "내가 만든 TEST 조회")
+    public ResponseEntity<ResponseDto<List<Post.MyPostDataResponse>>> getMyTest(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity
+                .ok()
+                .body(userService.getMyTest(userDetails.getUser()));
+    }
 
+    @GetMapping("/member/my/create/post/report")
+    @Operation(summary = "내가 만든 TEST의 레포트 조회")
+    public ResponseEntity<ResponseDto<List<Post.MyPostDataResponse>>> getMyTestReview(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                                                      @RequestParam Boolean hasAnswer,
+                                                                                      @RequestParam int size,
+                                                                                      @RequestParam int page
+    ) {
+        return ResponseEntity
+                .ok()
+                .body(userService.getMyTestReview(userDetails.getUser()));
+    }
 }
