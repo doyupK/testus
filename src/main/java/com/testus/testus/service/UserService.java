@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.testus.testus.common.response.ResponseDto;
 import com.testus.testus.common.response.exception.Code;
 import com.testus.testus.common.response.exception.CustomException;
+import com.testus.testus.domain.Post;
 import com.testus.testus.domain.User;
 import com.testus.testus.dto.member.PwResetUuidDto;
 import com.testus.testus.repository.UserRepo;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -27,6 +29,8 @@ public class UserService {
     private final EmailService emailService;
     private final RedisService redisService;
     private final ObjectMapper objectMapper;
+    private final PostService postService;
+    private final ReviewService reviewService;
 
     @Transactional
     public ResponseDto<User.MemberInfoDto> updateInfo(User.MemberInfoUpdateDto memberInfoUpdateOrSignupDto, User user) {
@@ -102,5 +106,15 @@ public class UserService {
             return new ResponseDto<>(Code.SUCCESS);
         }
 
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseDto<List<Post.MyPostDataResponse>> getMyTest(User user) {
+        return new ResponseDto<>(Code.SUCCESS, postService.getMyTest(user));
+
+    }
+
+    public Object getMyTestReview(User user) {
+        return new ResponseDto<>(Code.SUCCESS, reviewService.getMyTestReview(user));
     }
 }
