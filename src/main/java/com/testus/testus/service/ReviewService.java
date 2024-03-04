@@ -9,6 +9,10 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ReviewService {
     private final ReviewRepo reviewRepo;
+
+    public Object getMyTestReview(User user) {
+        return null;
+    }
 //    public Object getMyTestReview(User user) {
 //
 //    }

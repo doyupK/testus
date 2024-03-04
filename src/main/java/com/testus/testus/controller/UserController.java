@@ -74,7 +74,7 @@ public class UserController {
 
     @GetMapping("/member/my/create/post/report")
     @Operation(summary = "내가 만든 TEST의 레포트 조회")
-    public ResponseEntity<ResponseDto<List<Post.MyPostDataResponse>>> getMyTestReview(@AuthenticationPrincipal UserDetailsImpl userDetails,
+    public ResponseEntity<?> getMyTestReview(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                                                       @RequestParam Boolean hasAnswer,
                                                                                       @RequestParam int size,
                                                                                       @RequestParam int page

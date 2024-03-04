@@ -114,6 +114,7 @@ public class UserService {
 
     }
 
+    @Transactional(readOnly = true)
     public Object getMyTestReview(User user) {
         return new ResponseDto<>(Code.SUCCESS, reviewService.getMyTestReview(user));
     }
