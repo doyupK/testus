@@ -1,6 +1,7 @@
 package com.testus.testus.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.testus.testus.enums.ReportCategory;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -19,7 +20,13 @@ public class Report {
     @JoinColumn(name = "user_seq")
     private User createUser;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_seq")
+    private Post post;
+
     private char answerStatus;
+    @Enumerated(EnumType.STRING)
+    private ReportCategory reportCategory;
 
     private String inquiryContents;
     private String answer;
