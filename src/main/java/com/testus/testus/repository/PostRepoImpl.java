@@ -78,7 +78,7 @@ public class PostRepoImpl extends QuerydslRepositorySupport implements PostRepoC
                 .orderBy(post.seq.desc())
                 .limit(3)
                 .fetch();
-        )
+
     }
 
 

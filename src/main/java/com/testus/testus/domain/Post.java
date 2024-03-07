@@ -66,6 +66,8 @@ public class Post {
     @Getter
     @Setter
     @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class MyPostDataResponse {
         private int seq;
         private String thumbnailUrl;

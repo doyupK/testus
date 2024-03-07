@@ -19,6 +19,10 @@ public class Report {
     @JoinColumn(name = "user_seq")
     private User createUser;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_seq")
+    private Post post;
+
     private char answerStatus;
 
     private String inquiryContents;
