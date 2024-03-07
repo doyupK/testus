@@ -4,7 +4,6 @@ import com.testus.testus.domain.User;
 import com.testus.testus.dto.review.ReviewListDto;
 import com.testus.testus.repository.ReviewRepo;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,9 +13,14 @@ import java.util.List;
 public class ReviewService {
     private final ReviewRepo reviewRepo;
 
-    public Object getMyTestReview(User user) {
-        PageRequest pageRequest = PageRequest.of(0, 3);
-        return reviewRepo.getReviewByUserTest(user, pageRequest);
+    public List<ReviewListDto> getMyTestReview(User user) {
+
+        return reviewRepo.getReviewByUserTest(user);
+
+    }
+
+    public Long getNoAnswerReviewFromUserTest(User user) {
+        return reviewRepo.getNoAnswerReviewFromUserTest(user);
 
     }
 //    public Object getMyTestReview(User user) {

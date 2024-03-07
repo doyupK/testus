@@ -7,6 +7,7 @@ import com.testus.testus.common.response.exception.CustomException;
 import com.testus.testus.domain.Post;
 import com.testus.testus.domain.User;
 import com.testus.testus.dto.member.PwResetUuidDto;
+import com.testus.testus.dto.review.MyPageReviewListResDto;
 import com.testus.testus.repository.UserRepo;
 import com.testus.testus.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
@@ -116,6 +117,10 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public Object getMyTestReview(User user) {
-        return new ResponseDto<>(Code.SUCCESS, reviewService.getMyTestReview(user));
+        return new ResponseDto<>(
+                Code.SUCCESS,
+                MyPageReviewListResDto.builder()
+                        .reviewList(reviewService.getMyTestReview(user))
+                        .count(reviewService.getNoAnswerReviewFromUserTest(user)));
     }
 }

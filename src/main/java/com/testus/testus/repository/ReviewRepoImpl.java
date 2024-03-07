@@ -5,7 +5,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.testus.testus.domain.Review;
 import com.testus.testus.domain.User;
 import com.testus.testus.dto.review.ReviewListDto;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
 import java.util.List;
@@ -24,7 +23,7 @@ public class ReviewRepoImpl extends QuerydslRepositorySupport implements ReviewR
     }
 
     @Override
-    public List<ReviewListDto> getReviewByUserTest(User targetUser, Pageable pageRequest) {
+    public List<ReviewListDto> getReviewByUserTest(User targetUser) {
         return queryFactory.select(Projections.constructor(ReviewListDto.class,
                         review.reviewSeq,
                         review.answerYn,
@@ -44,5 +43,19 @@ public class ReviewRepoImpl extends QuerydslRepositorySupport implements ReviewR
                 .limit(3)
                 .fetch();
 
+    }
+
+    @Override
+    public Long getNoAnswerReviewFromUserTest(User targetUser) {
+        return queryFactory.select(
+                        review.reviewSeq.count()
+                )
+                .from(review)
+                .join(user).on(review.createUser.userSeq.eq(user.userSeq))
+                .join(post).on(post.seq.eq(review.test.seq))
+                .where(post.createUser.userSeq.eq(targetUser.getUserSeq()).and(
+                                review.test.seq.eq(post.seq)
+                        )
+                ).fetchFirst();
     }
 }
