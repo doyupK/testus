@@ -14,7 +14,7 @@ import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
 import java.time.LocalDate;
 import java.util.List;
 
-import static com.testus.testus.domain.QPost.post;
+import static com.testus.testus.domain.QExperienceRecruitment.experienceRecruitment;
 
 
 public class ExperienceRecruitmentRepoImpl extends QuerydslRepositorySupport implements ExperienceRecruitmentRepoCustom {
@@ -31,16 +31,16 @@ public class ExperienceRecruitmentRepoImpl extends QuerydslRepositorySupport imp
     public List<ExperienceRecruitmentThumbnailDto> getLatestPost(String category) {
         return queryFactory.select(
                         Projections.constructor(ExperienceRecruitmentThumbnailDto.class,
-                                post.seq,
-                                post.title,
-                                post.thumbnailUrl
+                                experienceRecruitment.seq,
+                                experienceRecruitment.title,
+                                experienceRecruitment.thumbnailUrl
                         ))
-                .from(post)
-                .where(post.endDate.after(LocalDate.now()),
+                .from(experienceRecruitment)
+                .where(experienceRecruitment.endDate.after(LocalDate.now()),
                         eqCategory(category)
                 )
                 .limit(6)
-                .orderBy(post.seq.desc())
+                .orderBy(experienceRecruitment.seq.desc())
                 .fetch();
 
     }
@@ -49,16 +49,16 @@ public class ExperienceRecruitmentRepoImpl extends QuerydslRepositorySupport imp
     public List<ExperienceRecruitmentThumbnailDto> getPopularPost(String category) {
         return queryFactory.select(
                         Projections.constructor(ExperienceRecruitmentThumbnailDto.class,
-                                post.seq,
-                                post.title,
-                                post.thumbnailUrl
+                                experienceRecruitment.seq,
+                                experienceRecruitment.title,
+                                experienceRecruitment.thumbnailUrl
                         ))
-                .from(post)
-                .where(post.endDate.after(LocalDate.now()),
+                .from(experienceRecruitment)
+                .where(experienceRecruitment.endDate.after(LocalDate.now()),
                         eqCategory(category)
                 )
                 .limit(6)
-                .orderBy(post.star.desc())
+                .orderBy(experienceRecruitment.star.desc())
                 .fetch();
     }
 
@@ -67,15 +67,15 @@ public class ExperienceRecruitmentRepoImpl extends QuerydslRepositorySupport imp
         return queryFactory.select(
                 Projections.constructor(
                         ExperienceRecruitment.MyPostDataResponse.class,
-                        post.seq,
-                        post.thumbnailUrl,
-                        post.title,
-                        post.currentJoinCount,
-                        post.endDate
+                        experienceRecruitment.seq,
+                        experienceRecruitment.thumbnailUrl,
+                        experienceRecruitment.title,
+                        experienceRecruitment.currentJoinCount,
+                        experienceRecruitment.endDate
                 ))
-                .from(post)
-                .where(post.createUser.eq(user))
-                .orderBy(post.seq.desc())
+                .from(experienceRecruitment)
+                .where(experienceRecruitment.createUser.eq(user))
+                .orderBy(experienceRecruitment.seq.desc())
                 .limit(3)
                 .fetch();
 
@@ -84,9 +84,9 @@ public class ExperienceRecruitmentRepoImpl extends QuerydslRepositorySupport imp
 
     private BooleanExpression eqCategory(String category) {
         return switch (category) {
-            case "APP" -> post.category.eq(ExperienceRecruitmentCategory.APP);
-            case "GAME" -> post.category.eq(ExperienceRecruitmentCategory.GAME);
-            case "SERVICE" -> post.category.eq(ExperienceRecruitmentCategory.SERVICE);
+            case "APP" -> experienceRecruitment.category.eq(ExperienceRecruitmentCategory.APP);
+            case "GAME" -> experienceRecruitment.category.eq(ExperienceRecruitmentCategory.GAME);
+            case "SERVICE" -> experienceRecruitment.category.eq(ExperienceRecruitmentCategory.SERVICE);
             default -> throw new CustomException(Code.BAD_REQUEST);
         };
     }
