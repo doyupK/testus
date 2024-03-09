@@ -1,6 +1,6 @@
 package com.testus.testus.enums;
 
-public enum TestCategory {
+public enum ExperienceRecruitmentCategory {
 
     APP("APP"),
     GAME("GAME"),
@@ -9,7 +9,7 @@ public enum TestCategory {
 
     private final String typeName;
 
-    TestCategory(String typeName) {
+    ExperienceRecruitmentCategory(String typeName) {
         this.typeName = typeName;
     }
 

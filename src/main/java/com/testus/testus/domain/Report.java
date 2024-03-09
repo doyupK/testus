@@ -20,8 +20,8 @@ public class Report {
     private User createUser;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_seq")
-    private Post post;
+    @JoinColumn(name = "experience_recruitment_seq")
+    private ExperienceRecruitment experienceRecruitment;
 
     private char answerStatus;
 

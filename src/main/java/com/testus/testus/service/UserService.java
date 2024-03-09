@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.testus.testus.common.response.ResponseDto;
 import com.testus.testus.common.response.exception.Code;
 import com.testus.testus.common.response.exception.CustomException;
-import com.testus.testus.domain.Post;
+import com.testus.testus.domain.ExperienceRecruitment;
 import com.testus.testus.domain.User;
 import com.testus.testus.dto.member.PwResetUuidDto;
 import com.testus.testus.dto.review.MyPageReviewListResDto;
@@ -30,7 +30,7 @@ public class UserService {
     private final EmailService emailService;
     private final RedisService redisService;
     private final ObjectMapper objectMapper;
-    private final PostService postService;
+    private final ExperienceRecruitmentService experienceRecruitmentService;
     private final ReviewService reviewService;
 
     @Transactional
@@ -110,8 +110,8 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseDto<List<Post.MyPostDataResponse>> getMyTest(User user) {
-        return new ResponseDto<>(Code.SUCCESS, postService.getMyTest(user));
+    public ResponseDto<List<ExperienceRecruitment.MyPostDataResponse>> getMyTest(User user) {
+        return new ResponseDto<>(Code.SUCCESS, experienceRecruitmentService.getMyTest(user));
 
     }
 

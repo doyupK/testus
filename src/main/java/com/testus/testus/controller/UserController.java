@@ -3,7 +3,7 @@ package com.testus.testus.controller;
 import com.testus.testus.common.response.ResponseDto;
 import com.testus.testus.common.response.exception.Code;
 import com.testus.testus.config.security.UserDetailsImpl;
-import com.testus.testus.domain.Post;
+import com.testus.testus.domain.ExperienceRecruitment;
 import com.testus.testus.domain.User;
 import com.testus.testus.service.AuthService;
 import com.testus.testus.service.UserService;
@@ -66,7 +66,7 @@ public class UserController {
 
     @GetMapping("/member/my/create/post")
     @Operation(summary = "내가 만든 TEST 조회")
-    public ResponseEntity<ResponseDto<List<Post.MyPostDataResponse>>> getMyTest(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<ResponseDto<List<ExperienceRecruitment.MyPostDataResponse>>> getMyTest(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseEntity
                 .ok()
                 .body(userService.getMyTest(userDetails.getUser()));
