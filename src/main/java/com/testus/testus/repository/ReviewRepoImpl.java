@@ -9,7 +9,8 @@ import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
 
 import java.util.List;
 
-import static com.testus.testus.domain.QPost.post;
+
+import static com.testus.testus.domain.QExperienceRecruitment.experienceRecruitment;
 import static com.testus.testus.domain.QReview.review;
 import static com.testus.testus.domain.QUser.user;
 
@@ -34,9 +35,9 @@ public class ReviewRepoImpl extends QuerydslRepositorySupport implements ReviewR
                 ))
                 .from(review)
                 .join(user).on(review.createUser.userSeq.eq(user.userSeq))
-                .join(post).on(post.seq.eq(review.test.seq))
-                .where(post.createUser.userSeq.eq(targetUser.getUserSeq()).and(
-                                review.test.seq.eq(post.seq)
+                .join(experienceRecruitment).on(experienceRecruitment.seq.eq(review.test.seq))
+                .where(experienceRecruitment.createUser.userSeq.eq(targetUser.getUserSeq()).and(
+                                review.test.seq.eq(experienceRecruitment.seq)
                         )
                 )
                 .orderBy(review.reviewSeq.desc())
@@ -52,9 +53,9 @@ public class ReviewRepoImpl extends QuerydslRepositorySupport implements ReviewR
                 )
                 .from(review)
                 .join(user).on(review.createUser.userSeq.eq(user.userSeq))
-                .join(post).on(post.seq.eq(review.test.seq))
-                .where(post.createUser.userSeq.eq(targetUser.getUserSeq()).and(
-                                review.test.seq.eq(post.seq)
+                .join(experienceRecruitment).on(experienceRecruitment.seq.eq(review.test.seq))
+                .where(experienceRecruitment.createUser.userSeq.eq(targetUser.getUserSeq()).and(
+                                review.test.seq.eq(experienceRecruitment.seq)
                         )
                 ).fetchFirst();
     }
