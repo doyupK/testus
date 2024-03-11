@@ -46,6 +46,8 @@ public class ExperienceRecruitmentService {
 
     @Transactional
     public Object createRecruitment(ExperienceRecruitment.CreatePostDto dto, User user) throws JsonProcessingException {
+        //
+        // TODO: 3/9/24 S3 upload logic will be add later
         experienceRecruitmentRepo.save(ExperienceRecruitment.builder()
                 .title(dto.getTitle())
                 .thumbnailUrl(ob.writeValueAsString(dto.getThumbnailUrl()))
