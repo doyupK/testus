@@ -2,6 +2,7 @@ package com.testus.testus.repository;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.testus.testus.common.response.exception.Code;
 import com.testus.testus.common.response.exception.CustomException;
@@ -9,10 +10,15 @@ import com.testus.testus.domain.ExperienceRecruitment;
 import com.testus.testus.domain.User;
 import com.testus.testus.dto.post.ExperienceRecruitmentThumbnailDto;
 import com.testus.testus.enums.ExperienceRecruitmentCategory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 import static com.testus.testus.domain.QExperienceRecruitment.experienceRecruitment;
 
@@ -63,22 +69,25 @@ public class ExperienceRecruitmentRepoImpl extends QuerydslRepositorySupport imp
     }
 
     @Override
-    public List<ExperienceRecruitment.MyPostDataResponse> getMyTest(User user) {
-        return queryFactory.select(
-                Projections.constructor(
-                        ExperienceRecruitment.MyPostDataResponse.class,
-                        experienceRecruitment.seq,
-                        experienceRecruitment.thumbnailUrl,
-                        experienceRecruitment.title,
-                        experienceRecruitment.currentJoinCount,
-                        experienceRecruitment.endDate
-                ))
+    public Page<ExperienceRecruitment.MyPostDataResponse> getMyTest(User user, Pageable pageable) {
+        JPQLQuery<ExperienceRecruitment.MyPostDataResponse> query = queryFactory.select(
+                        Projections.constructor(
+                                ExperienceRecruitment.MyPostDataResponse.class,
+                                experienceRecruitment.seq,
+                                experienceRecruitment.thumbnailUrl,
+                                experienceRecruitment.title,
+                                experienceRecruitment.currentJoinCount,
+                                experienceRecruitment.endDate
+                        ))
                 .from(experienceRecruitment)
                 .where(experienceRecruitment.createUser.eq(user))
                 .orderBy(experienceRecruitment.seq.desc())
-                .limit(3)
-                .fetch();
+                .limit(3);
+//                .fetch()
 
+        List<ExperienceRecruitment.MyPostDataResponse> testList =
+                Objects.requireNonNull(this.getQuerydsl()).applyPagination(pageable, query).fetch();
+        return new PageImpl<>(testList, pageable, query.fetchCount());
     }
 
 
