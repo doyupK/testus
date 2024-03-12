@@ -9,7 +9,8 @@ import com.testus.testus.domain.User;
 import com.testus.testus.dto.post.ExperienceRecruitmentThumbnailDto;
 import com.testus.testus.repository.ExperienceRecruitmentRepo;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cglib.core.Local;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,8 +40,8 @@ public class ExperienceRecruitmentService {
     }
 
     @Transactional(readOnly = true)
-    public List<ExperienceRecruitment.MyPostDataResponse> getMyTest(User user) {
-        return experienceRecruitmentRepo.getMyTest(user);
+    public Page<ExperienceRecruitment.MyPostDataResponse> getMyTest(User user, PageRequest pageRequest) {
+        return experienceRecruitmentRepo.getMyTest(user, pageRequest);
 
     }
 

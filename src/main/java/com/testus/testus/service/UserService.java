@@ -12,6 +12,8 @@ import com.testus.testus.repository.UserRepo;
 import com.testus.testus.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -110,8 +112,9 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseDto<List<ExperienceRecruitment.MyPostDataResponse>> getMyTest(User user) {
-        return new ResponseDto<>(Code.SUCCESS, experienceRecruitmentService.getMyTest(user));
+    public ResponseDto<Page<ExperienceRecruitment.MyPostDataResponse>> getMyTest(User user, int size, int pageNo) {
+        PageRequest pageRequest = PageRequest.of(pageNo, size);
+        return new ResponseDto<>(Code.SUCCESS, experienceRecruitmentService.getMyTest(user, pageRequest));
 
     }
 

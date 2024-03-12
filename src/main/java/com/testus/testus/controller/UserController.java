@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -66,10 +67,12 @@ public class UserController {
 
     @GetMapping("/member/my/create/post")
     @Operation(summary = "내가 만든 TEST 조회")
-    public ResponseEntity<ResponseDto<List<ExperienceRecruitment.MyPostDataResponse>>> getMyTest(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<ResponseDto<Page<ExperienceRecruitment.MyPostDataResponse>>> getMyTest(@RequestParam int size,
+                                                                                                 @RequestParam int pageNo,
+                                                                                                 @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseEntity
                 .ok()
-                .body(userService.getMyTest(userDetails.getUser()));
+                .body(userService.getMyTest(userDetails.getUser(), size, pageNo));
     }
 
     @GetMapping("/member/my/create/post/report")
