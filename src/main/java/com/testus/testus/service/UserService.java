@@ -8,6 +8,7 @@ import com.testus.testus.domain.ExperienceRecruitment;
 import com.testus.testus.domain.User;
 import com.testus.testus.dto.member.PwResetUuidDto;
 import com.testus.testus.dto.review.MyPageReviewListResDto;
+import com.testus.testus.dto.review.ReviewListDto;
 import com.testus.testus.repository.UserRepo;
 import com.testus.testus.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -112,18 +112,26 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseDto<Page<ExperienceRecruitment.MyPostDataResponse>> getMyTest(User user, int size, int pageNo) {
+    public ResponseDto<Page<ExperienceRecruitment.MyPostDataResponse>> getMyCreateTest(User user, int size, int pageNo) {
         PageRequest pageRequest = PageRequest.of(pageNo, size);
         return new ResponseDto<>(Code.SUCCESS, experienceRecruitmentService.getMyTest(user, pageRequest));
 
     }
 
     @Transactional(readOnly = true)
-    public Object getMyTestReview(User user) {
+    public Object getMyTestReview(User user, int size, int page) {
+        PageRequest pageRequest = PageRequest.of(page, size);
         return new ResponseDto<>(
                 Code.SUCCESS,
                 MyPageReviewListResDto.builder()
-                        .reviewList(reviewService.getMyTestReview(user))
+                        .reviewList(reviewService.getMyTestReview(user, pageRequest))
                         .count(reviewService.getNoAnswerReviewFromUserTest(user)));
+    }
+
+    public Object getMyJoinTest(User user, int size, int pageNo) {
+        PageRequest pageRequest = PageRequest.of(pageNo, size);
+
+        experienceRecruitmentService.getMyJoinTest(user, pageRequest);
+        return null;
     }
 }

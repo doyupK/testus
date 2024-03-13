@@ -17,8 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @Slf4j
 @RequiredArgsConstructor
@@ -67,23 +65,32 @@ public class UserController {
 
     @GetMapping("/member/my/create/post")
     @Operation(summary = "내가 만든 TEST 조회")
-    public ResponseEntity<ResponseDto<Page<ExperienceRecruitment.MyPostDataResponse>>> getMyTest(@RequestParam int size,
-                                                                                                 @RequestParam int pageNo,
-                                                                                                 @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<ResponseDto<Page<ExperienceRecruitment.MyPostDataResponse>>> getMyCreateTest(@RequestParam int size,
+                                                                                                       @RequestParam int pageNo,
+                                                                                                       @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseEntity
                 .ok()
-                .body(userService.getMyTest(userDetails.getUser(), size, pageNo));
+                .body(userService.getMyCreateTest(userDetails.getUser(), size, pageNo));
     }
 
     @GetMapping("/member/my/create/post/report")
     @Operation(summary = "내가 만든 TEST의 레포트 조회")
     public ResponseEntity<?> getMyTestReview(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                                                      @RequestParam Boolean hasAnswer,
-                                                                                      @RequestParam int size,
-                                                                                      @RequestParam int page
+                                             @RequestParam int size,
+                                             @RequestParam int page
     ) {
         return ResponseEntity
                 .ok()
-                .body(userService.getMyTestReview(userDetails.getUser()));
+                .body(userService.getMyTestReview(userDetails.getUser(), size, page));
+    }
+
+    @GetMapping("/member/my/join/post")
+    @Operation(summary = "내가 참여한 TEST 조회")
+    public ResponseEntity<?> getMyJoinTest(@RequestParam int size,
+                                           @RequestParam int pageNo,
+                                           @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity
+                .ok()
+                .body(userService.getMyJoinTest(userDetails.getUser(), size, pageNo));
     }
 }

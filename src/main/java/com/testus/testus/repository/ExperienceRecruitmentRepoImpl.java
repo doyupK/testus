@@ -81,13 +81,37 @@ public class ExperienceRecruitmentRepoImpl extends QuerydslRepositorySupport imp
                         ))
                 .from(experienceRecruitment)
                 .where(experienceRecruitment.createUser.eq(user))
-                .orderBy(experienceRecruitment.seq.desc())
-                .limit(3);
+                .orderBy(experienceRecruitment.seq.desc());
+//                .limit(3);
 //                .fetch()
 
         List<ExperienceRecruitment.MyPostDataResponse> testList =
                 Objects.requireNonNull(this.getQuerydsl()).applyPagination(pageable, query).fetch();
         return new PageImpl<>(testList, pageable, query.fetchCount());
+    }
+
+    @Override
+    public void getMyJoinTest(User user, PageRequest pageRequest) {
+//        JPQLQuery<ExperienceRecruitment.MyPostDataResponse> query = queryFactory.select(
+//                        Projections.constructor(
+//                                ExperienceRecruitment.MyPostDataResponse.class,
+//                                experienceRecruitment.seq,
+//                                experienceRecruitment.thumbnailUrl,
+//                                experienceRecruitment.title,
+//                                experienceRecruitment.currentJoinCount,
+//                                experienceRecruitment.endDate
+//                        ))
+//                .from(experienceRecruitment)
+//                .where(experienceRecruitment.createUser.eq(user))
+//                .orderBy(experienceRecruitment.seq.desc());
+////                .limit(3);
+////                .fetch()
+//
+//        List<ExperienceRecruitment.MyPostDataResponse> testList =
+//                Objects.requireNonNull(this.getQuerydsl()).applyPagination(pageable, query).fetch();
+//        return new PageImpl<>(testList, pageable, query.fetchCount());
+
+        // TODO: 3/13/24 이어서 할 것
     }
 
 
