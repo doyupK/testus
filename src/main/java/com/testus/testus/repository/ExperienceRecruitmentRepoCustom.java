@@ -16,4 +16,6 @@ public interface ExperienceRecruitmentRepoCustom {
 
     Page<ExperienceRecruitment.MyPostDataResponse> getMyTest(User user, Pageable pageable);
 
+    void getMyJoinTest(User user, PageRequest pageRequest);
+
 }
