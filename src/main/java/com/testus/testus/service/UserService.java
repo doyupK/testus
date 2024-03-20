@@ -7,14 +7,14 @@ import com.testus.testus.common.response.exception.CustomException;
 import com.testus.testus.domain.ExperienceRecruitment;
 import com.testus.testus.domain.User;
 import com.testus.testus.dto.member.PwResetUuidDto;
-import com.testus.testus.dto.review.MyPageReviewListResDto;
-import com.testus.testus.dto.review.ReviewListDto;
+import com.testus.testus.dto.review.MyPageReportListResDto;
+import com.testus.testus.dto.review.ReportListDto;
+import com.testus.testus.repository.ReportRepo;
 import com.testus.testus.repository.UserRepo;
 import com.testus.testus.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -36,6 +36,7 @@ public class UserService {
     private final ExperienceRecruitmentService experienceRecruitmentService;
     private final ReviewService reviewService;
     private final TestJoinMapService testJoinMapService;
+    private final ReportService reportService;
 
     @Transactional
     public ResponseDto<User.MemberInfoDto> updateInfo(User.MemberInfoUpdateDto memberInfoUpdateOrSignupDto, User user) {
@@ -121,19 +122,28 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Object getMyTestReview(User user, int size, int page) {
+    public ResponseDto<MyPageReportListResDto> getMyTestReport(User user, int size, int page) {
         PageRequest pageRequest = PageRequest.of(page, size);
         return new ResponseDto<>(
                 Code.SUCCESS,
-                MyPageReviewListResDto.builder()
-                        .reviewList(reviewService.getMyTestReview(user, pageRequest))
-                        .count(reviewService.getNoAnswerReviewFromUserTest(user)));
+                MyPageReportListResDto.builder()
+                        .reportList(reportService.getMyTestReport(user, pageRequest))
+                        .count(reportService.getNoAnswerReportFromUserTest(user)).build());
     }
-
-    public Object getMyJoinTest(User user, int size, int pageNo) {
+    @Transactional(readOnly = true)
+    public ResponseDto<Page<ExperienceRecruitment.MyPostDataResponse>> getMyJoinTest(User user, int size, int pageNo) {
         PageRequest pageRequest = PageRequest.of(pageNo, size);
         return new ResponseDto<>(
                 Code.SUCCESS,
                 testJoinMapService.getMyJoinTest(user, pageRequest));
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseDto<Page<ReportListDto>> getMyCreateReport(User user, int size, int pageNo) {
+        PageRequest pageRequest = PageRequest.of(pageNo, size);
+        return new ResponseDto<>(
+                Code.SUCCESS,
+                reportService.getUserCreateReportList(user, pageRequest)
+        );
     }
 }

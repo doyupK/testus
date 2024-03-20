@@ -5,6 +5,8 @@ import com.testus.testus.common.response.exception.Code;
 import com.testus.testus.config.security.UserDetailsImpl;
 import com.testus.testus.domain.ExperienceRecruitment;
 import com.testus.testus.domain.User;
+import com.testus.testus.dto.review.MyPageReportListResDto;
+import com.testus.testus.dto.review.ReportListDto;
 import com.testus.testus.service.AuthService;
 import com.testus.testus.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -75,22 +77,32 @@ public class UserController {
 
     @GetMapping("/member/my/create/post/report")
     @Operation(summary = "내가 만든 TEST의 레포트 조회")
-    public ResponseEntity<?> getMyTestReview(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                             @RequestParam int size,
-                                             @RequestParam int page
+    public ResponseEntity<ResponseDto<MyPageReportListResDto>> getMyTestReview(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                                               @RequestParam int size,
+                                                                               @RequestParam int page
     ) {
         return ResponseEntity
                 .ok()
-                .body(userService.getMyTestReview(userDetails.getUser(), size, page));
+                .body(userService.getMyTestReport(userDetails.getUser(), size, page));
     }
 
     @GetMapping("/member/my/join/post")
     @Operation(summary = "내가 참여한 TEST 조회")
-    public ResponseEntity<?> getMyJoinTest(@RequestParam int size,
+    public ResponseEntity<ResponseDto<Page<ExperienceRecruitment.MyPostDataResponse>>> getMyJoinTest(@RequestParam int size,
                                            @RequestParam int pageNo,
                                            @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseEntity
                 .ok()
                 .body(userService.getMyJoinTest(userDetails.getUser(), size, pageNo));
+    }
+
+    @GetMapping("/member/my/create/report")
+    @Operation(summary = "내가 작성한 리포트 조회")
+    public ResponseEntity<ResponseDto<Page<ReportListDto>>> getMyCreateReport(@RequestParam int size,
+                                                                              @RequestParam int pageNo,
+                                                                              @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity
+                .ok()
+                .body(userService.getMyCreateReport(userDetails.getUser(), size, pageNo));
     }
 }
