@@ -67,7 +67,4 @@ public class ExperienceRecruitmentService {
         return new ResponseDto<>(Code.SUCCESS);
     }
 
-    public void getMyJoinTest(User user, PageRequest pageRequest) {
-        experienceRecruitmentRepo.getMyJoinTest(user, pageRequest);
-    }
 }
