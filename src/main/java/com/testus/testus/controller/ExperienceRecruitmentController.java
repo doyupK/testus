@@ -45,12 +45,12 @@ public class ExperienceRecruitmentController {
                 .body(experienceRecruitmentService.getPopularPost(category));
 
     }
+
     @PostMapping("/")
     @Operation(summary = "테스트 생성")
-    public ResponseEntity<?> createTest(
-            @RequestBody ExperienceRecruitment.CreatePostDto dto,
-            @AuthenticationPrincipal UserDetailsImpl userDetails
-            ) throws JsonProcessingException {
+    public ResponseEntity<?> createTest(@RequestBody ExperienceRecruitment.CreatePostDto dto,
+                                        @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) throws JsonProcessingException {
 
         return ResponseEntity
                 .ok()
