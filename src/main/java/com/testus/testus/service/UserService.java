@@ -14,6 +14,7 @@ import com.testus.testus.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,7 @@ public class UserService {
     private final ObjectMapper objectMapper;
     private final ExperienceRecruitmentService experienceRecruitmentService;
     private final ReviewService reviewService;
+    private final TestJoinMapService testJoinMapService;
 
     @Transactional
     public ResponseDto<User.MemberInfoDto> updateInfo(User.MemberInfoUpdateDto memberInfoUpdateOrSignupDto, User user) {
@@ -130,8 +132,8 @@ public class UserService {
 
     public Object getMyJoinTest(User user, int size, int pageNo) {
         PageRequest pageRequest = PageRequest.of(pageNo, size);
-// TODO: 3/17/24  
-        experienceRecruitmentService.getMyJoinTest(user, pageRequest);
-        return null;
+        return new ResponseDto<>(
+                Code.SUCCESS,
+                testJoinMapService.getMyJoinTest(user, pageRequest));
     }
 }

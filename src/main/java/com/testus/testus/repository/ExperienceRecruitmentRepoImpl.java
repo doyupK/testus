@@ -12,7 +12,6 @@ import com.testus.testus.dto.post.ExperienceRecruitmentThumbnailDto;
 import com.testus.testus.enums.ExperienceRecruitmentCategory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
@@ -87,32 +86,11 @@ public class ExperienceRecruitmentRepoImpl extends QuerydslRepositorySupport imp
 
         List<ExperienceRecruitment.MyPostDataResponse> testList =
                 Objects.requireNonNull(this.getQuerydsl()).applyPagination(pageable, query).fetch();
+
         return new PageImpl<>(testList, pageable, query.fetchCount());
     }
 
-    @Override
-    public void getMyJoinTest(User user, PageRequest pageRequest) {
-//        JPQLQuery<ExperienceRecruitment.MyPostDataResponse> query = queryFactory.select(
-//                        Projections.constructor(
-//                                ExperienceRecruitment.MyPostDataResponse.class,
-//                                experienceRecruitment.seq,
-//                                experienceRecruitment.thumbnailUrl,
-//                                experienceRecruitment.title,
-//                                experienceRecruitment.currentJoinCount,
-//                                experienceRecruitment.endDate
-//                        ))
-//                .from(experienceRecruitment)
-//                .where(experienceRecruitment.createUser.eq(user))
-//                .orderBy(experienceRecruitment.seq.desc());
-////                .limit(3);
-////                .fetch()
-//
-//        List<ExperienceRecruitment.MyPostDataResponse> testList =
-//                Objects.requireNonNull(this.getQuerydsl()).applyPagination(pageable, query).fetch();
-//        return new PageImpl<>(testList, pageable, query.fetchCount());
 
-        // TODO: 3/13/24 이어서 할 것
-    }
 
 
     private BooleanExpression eqCategory(String category) {
