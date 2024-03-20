@@ -1,6 +1,7 @@
 package com.testus.testus.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.testus.testus.enums.ReportCategory;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -22,6 +23,9 @@ public class Report {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "experience_recruitment_seq")
     private ExperienceRecruitment experienceRecruitment;
+
+    @Enumerated(EnumType.STRING)
+    private ReportCategory reportCategory;
 
     private char answerStatus;
 

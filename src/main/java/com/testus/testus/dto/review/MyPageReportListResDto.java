@@ -6,7 +6,7 @@ import lombok.Setter;
 import org.springframework.data.domain.Page;
 
 @Getter @Setter @Builder
-public class MyPageReviewListResDto {
+public class MyPageReportListResDto {
     private Long count;
-    private Page<ReviewListDto> reviewList;
+    private Page<ReportListDto> reportList;
 }

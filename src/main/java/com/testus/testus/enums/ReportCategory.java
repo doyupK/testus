@@ -1,6 +1,6 @@
 package com.testus.testus.enums;
 
-public enum ReportReviewCategory {
+public enum ReportCategory {
     BUG("BUG"),
     IDEA("IDEA"),
     UI_UX("UI_UX")
@@ -8,7 +8,7 @@ public enum ReportReviewCategory {
 
     private final String typeName;
 
-    ReportReviewCategory(String typeName) {
+    ReportCategory(String typeName) {
         this.typeName = typeName;
     }
 
