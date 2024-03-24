@@ -112,4 +112,14 @@ public class ExperienceRecruitment {
 
     }
 
+    @Getter
+    @Setter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class AddTesterDto {
+        private int seq;
+        private String userEmail;
+    }
+
 }

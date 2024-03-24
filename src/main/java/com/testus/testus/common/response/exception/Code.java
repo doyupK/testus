@@ -24,6 +24,7 @@ public enum Code {
     EXIST_USER                  (HttpStatus.OK, "E40004", "이미 존재하는 회원입니다."),
     VALIDATION_ERROR            (HttpStatus.OK, "E40005", "올바른 형식을 입력해주세요."),
     PASSWORD_UNMATCHED          (HttpStatus.OK, "E40006", "아이디/비밀번호 불일치\n 확인 후 다시 로그인하세요."),
+    ADD_SELF_ERROR              (HttpStatus.OK, "E40007", "자기 자신은 추가 할 수 없습니다."),
     REQUIRED_TERMS_CONDITIONS   (HttpStatus.OK, "E40016", "필수 약관은 동의 후 가입 가능합니다."),
 
     //401 Authentication

@@ -142,7 +142,7 @@ public class User {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class FindPwRequestDto {
+    public static class EmailDto {
         private String userEmail;
     }
 

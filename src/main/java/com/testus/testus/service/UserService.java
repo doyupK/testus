@@ -9,7 +9,6 @@ import com.testus.testus.domain.User;
 import com.testus.testus.dto.member.PwResetUuidDto;
 import com.testus.testus.dto.review.MyPageReportListResDto;
 import com.testus.testus.dto.review.ReportListDto;
-import com.testus.testus.repository.ReportRepo;
 import com.testus.testus.repository.UserRepo;
 import com.testus.testus.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -72,7 +72,7 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseDto<Code> resetPwMailSend(User.FindPwRequestDto dto) throws Exception {
+    public ResponseDto<Code> resetPwMailSend(User.EmailDto dto) throws Exception {
         UUID uuid = UUID.randomUUID();
 
         User user = userRepo.findOneByUserEmail(dto.getUserEmail()).orElseThrow(
@@ -83,7 +83,7 @@ public class UserService {
                 .userSeq(user.getUserSeq())
                 .userEmail(user.getUserEmail())
                 .build();
-        redisService.setValues("RESET::"+uuid, pwResetUuidDto, Duration.ofMinutes(10));
+        redisService.setValues("RESET::" + uuid, pwResetUuidDto, Duration.ofMinutes(10));
         return new ResponseDto<>(Code.SUCCESS);
     }
 
@@ -92,7 +92,7 @@ public class UserService {
         Object values = redisService.getValues("RESET::" + dto.getUuid());
         PwResetUuidDto pwResetUuidDto = objectMapper.convertValue(values, PwResetUuidDto.class);
         log.info("password : {}", pwResetUuidDto.getUserEmail() == null ? "null" : pwResetUuidDto.getUserEmail());
-        if (dto.getUserEmail().equals(pwResetUuidDto.getUserEmail())){
+        if (dto.getUserEmail().equals(pwResetUuidDto.getUserEmail())) {
             User target = userRepo.findById(pwResetUuidDto.getUserSeq()).orElseThrow(
                     () -> new CustomException(Code.BAD_REQUEST)
             );
@@ -106,7 +106,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public ResponseDto<Code> checkEmail(String email) {
-        if (userRepo.findOneByUserEmail(email).isPresent()){
+        if (userRepo.findOneByUserEmail(email).isPresent()) {
             throw new CustomException(Code.EMAIL_DUPLICATE);
         } else {
             return new ResponseDto<>(Code.SUCCESS);
@@ -130,6 +130,7 @@ public class UserService {
                         .reportList(reportService.getMyTestReport(user, pageRequest))
                         .count(reportService.getNoAnswerReportFromUserTest(user)).build());
     }
+
     @Transactional(readOnly = true)
     public ResponseDto<Page<ExperienceRecruitment.MyPostDataResponse>> getMyJoinTest(User user, int size, int pageNo) {
         PageRequest pageRequest = PageRequest.of(pageNo, size);
@@ -145,5 +146,16 @@ public class UserService {
                 Code.SUCCESS,
                 reportService.getUserCreateReportList(user, pageRequest)
         );
+    }
+
+
+    @Transactional(readOnly = true)
+    public User addTesterBeforeCheck(String userEmail) {
+        Optional<User> u = userRepo.findOneByUserEmail(userEmail);
+        if (u.isPresent()) {
+            return u.get();
+        } else {
+            throw new CustomException(Code.NOT_FOUND_USER);
+        }
     }
 }

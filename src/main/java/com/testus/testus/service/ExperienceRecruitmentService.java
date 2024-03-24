@@ -4,10 +4,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.testus.testus.common.response.ResponseDto;
 import com.testus.testus.common.response.exception.Code;
+import com.testus.testus.common.response.exception.CustomException;
 import com.testus.testus.domain.ExperienceRecruitment;
+import com.testus.testus.domain.TestJoinMapping;
 import com.testus.testus.domain.User;
 import com.testus.testus.dto.post.ExperienceRecruitmentThumbnailDto;
 import com.testus.testus.repository.ExperienceRecruitmentRepo;
+import com.testus.testus.repository.TestJoinMapRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,7 +26,8 @@ public class ExperienceRecruitmentService {
 
     private final ExperienceRecruitmentRepo experienceRecruitmentRepo;
     private final ObjectMapper ob;
-
+    private final UserService userService;
+    private final TestJoinMapRepo testJoinMapRepo;
 
 
     @Transactional(readOnly = true)
@@ -53,7 +57,7 @@ public class ExperienceRecruitmentService {
                 .title(dto.getTitle())
                 .thumbnailUrl(ob.writeValueAsString(dto.getThumbnailUrl()))
                 .serviceUrl(dto.getTestUrl())
-                .exposureType(dto.isExposureType()?'O':'I')
+                .exposureType(dto.isExposureType() ? 'O' : 'I')
                 .joinLimit(dto.getJoinLimit())
                 .currentJoinCount(0)
                 .contents(dto.getTestContents())
@@ -67,4 +71,24 @@ public class ExperienceRecruitmentService {
         return new ResponseDto<>(Code.SUCCESS);
     }
 
+    @Transactional
+    public ResponseDto<Code> addTester(ExperienceRecruitment.AddTesterDto dto, User user) {
+        if (dto.getUserEmail().equals(user.getUserEmail())) {
+            throw new CustomException(Code.ADD_SELF_ERROR);
+        } else {
+            User findUser = userService.addTesterBeforeCheck(dto.getUserEmail());
+            ExperienceRecruitment experienceRecruitment =
+                    experienceRecruitmentRepo.findById(dto.getSeq()).orElseThrow(
+                            () -> new CustomException(Code.BAD_REQUEST)
+                    );
+
+            testJoinMapRepo.save(
+                    TestJoinMapping.builder()
+                            .experienceRecruitment(experienceRecruitment)
+                            .user(findUser)
+                            .build()
+            );
+            return new ResponseDto<>(Code.SUCCESS);
+        }
+    }
 }
