@@ -55,7 +55,7 @@ public class ExperienceRecruitmentService {
         // TODO: 3/9/24 S3 upload logic will be add later
         experienceRecruitmentRepo.save(ExperienceRecruitment.builder()
                 .title(dto.getTitle())
-                .thumbnailUrl(ob.writeValueAsString(dto.getThumbnailUrl()))
+                .thumbnail(ob.writeValueAsString(dto.getThumbnailUrl()))
                 .serviceUrl(dto.getTestUrl())
                 .exposureType(dto.isExposureType() ? 'O' : 'I')
                 .joinLimit(dto.getJoinLimit())
@@ -90,5 +90,16 @@ public class ExperienceRecruitmentService {
             );
             return new ResponseDto<>(Code.SUCCESS);
         }
+    }
+
+    @Transactional(readOnly = true)
+    public Object getTestList(int lastId, String category, String tag, String sortBy, User user) {
+
+        if (user == null){
+            experienceRecruitmentRepo.getTestList(lastId, category, tag, sortBy);
+        } else {
+            experienceRecruitmentRepo.getTestList(lastId, category, tag, sortBy, user);
+        }
+        return new ResponseDto<>(null);
     }
 }

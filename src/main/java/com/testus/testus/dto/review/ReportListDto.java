@@ -7,7 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
-@Getter @Setter @Builder
+@Getter @Setter
 @NoArgsConstructor
 public class ReportListDto {
     private int seq;

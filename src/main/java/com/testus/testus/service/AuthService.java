@@ -71,6 +71,7 @@ public class AuthService {
                     .userPassword(passwordEncoder.encode(dto.getPassword()))
                     .userName(dto.getUserName())
                     .userEmail(dto.getUserEmail())
+                    .gender(dto.getGender())
                     .status('Y')
                     .role("ROLE_USER")
                     .marketingYn(dto.getMarketingYn())

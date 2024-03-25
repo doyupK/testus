@@ -71,4 +71,24 @@ public class ExperienceRecruitmentController {
                 .body(experienceRecruitmentService.addTester(dto, userDetails.getUser()));
     }
 
+    @GetMapping("/")
+    @Operation(summary = "테스트 리스트 조회")
+    public ResponseEntity<Object> getTestList(@RequestParam int lastId,
+                                              @Parameter(example = "APP or GAME or SERVICE")
+                                         @RequestParam String category,
+                                              @Parameter(example = "ALL or AVAILABLE")
+                                         @RequestParam String tag,
+                                              @Parameter(example = "popularity or join or endDate or latest")
+                                         @RequestParam String sortBy,
+                                              @AuthenticationPrincipal UserDetailsImpl userDetails
+                                         ) {
+
+        return ResponseEntity
+                .ok()
+                .body(experienceRecruitmentService.getTestList(lastId, category, tag, sortBy, userDetails.getUser()))
+                ;
+    }
+
+
+
 }

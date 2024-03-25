@@ -2,6 +2,7 @@ package com.testus.testus.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.testus.testus.dto.post.ExperienceRecruitmentThumbnailDto;
 import com.testus.testus.enums.ExperienceRecruitmentCategory;
 import jakarta.persistence.*;
 import lombok.*;
@@ -23,6 +24,9 @@ public class ExperienceRecruitment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_seq")
     private User createUser;
+
+    @Column
+    private String thumbnail;
     @Column
     @Enumerated(EnumType.STRING)
     private ExperienceRecruitmentCategory category;
@@ -54,8 +58,6 @@ public class ExperienceRecruitment {
     private String contents;
     @Column
     private String serviceUrl;
-    @Column
-    private String thumbnailUrl;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDate createDate;
@@ -120,6 +122,15 @@ public class ExperienceRecruitment {
     public static class AddTesterDto {
         private int seq;
         private String userEmail;
+    }
+
+    @Getter
+    @Setter
+    @Builder
+    public static class TestListResponse {
+        private List<ExperienceRecruitmentThumbnailDto> data;
+        private Boolean isLast;
+
     }
 
 }
