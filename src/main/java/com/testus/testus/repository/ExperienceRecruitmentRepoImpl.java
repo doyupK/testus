@@ -2,6 +2,7 @@ package com.testus.testus.repository;
 
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPQLQuery;
@@ -147,8 +148,11 @@ public class ExperienceRecruitmentRepoImpl extends QuerydslRepositorySupport imp
 
                                 ))
                         .from(experienceRecruitment)
-                        .where(ltCursorId(lastId), eqCategory(category), eqAvailable(user)
-
+                        .where(
+                                ltCursorId(lastId),
+                                eqCategory(category),
+                                eqGender(user.getGender()),
+                                eqAge(user.getBirthDay())
                         )
                         .limit(9)
                         .orderBy(eqOrder(sortBy))
@@ -160,11 +164,22 @@ public class ExperienceRecruitmentRepoImpl extends QuerydslRepositorySupport imp
         return ExperienceRecruitment.TestListResponse.builder().data(result).isLast(isLast).build();
     }
 
-    private BooleanExpression eqAvailable(User user) {
-        // TODO: 3/25/24 이어할것 
-//        if (user.getGender())
-        return null;
+    private BooleanExpression eqAge(LocalDate birthDay) {
+        if (birthDay == null) {
+            return null;
+        } else {
+            return experienceRecruitment.ageLimit.goe((LocalDate.now().getYear() - birthDay.getYear()) - (LocalDate.now().getYear() - birthDay.getYear()) % 10);
+        }
     }
+
+    private BooleanExpression eqGender(Character gender) {
+        if (gender == null) {
+            return null;
+        } else {
+            return experienceRecruitment.genderType.eq(gender);
+        }
+    }
+
 
     private OrderSpecifier<?> eqOrder(String sortBy) {
         return switch (sortBy) {
