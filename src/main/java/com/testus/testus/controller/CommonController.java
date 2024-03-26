@@ -40,7 +40,7 @@ public class CommonController {
 
     @PostMapping("/common/member/pw/mail")
     @Operation(summary = "비밀번호 재설정 메일발송", description = "비밀번호 메일발송 API")
-    public ResponseEntity<ResponseDto<Code>> findMemberID(@RequestBody User.FindPwRequestDto dto) throws Exception {
+    public ResponseEntity<ResponseDto<Code>> findMemberID(@RequestBody User.EmailDto dto) throws Exception {
         return ResponseEntity
                 .ok()
                 .body(userService.resetPwMailSend(dto));

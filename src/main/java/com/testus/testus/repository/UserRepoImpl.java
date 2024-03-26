@@ -19,6 +19,7 @@ public class UserRepoImpl implements UserRepoCustom {
                     .set(user.userName, memberInfoUpdateOrSignupDto.getUserName())
                     .set(user.userEmail, memberInfoUpdateOrSignupDto.getUserEmail())
                     .set(user.status, 'Y')
+                    .set(user.gender, memberInfoUpdateOrSignupDto.getGender())
                     .set(user.phoneNumber, memberInfoUpdateOrSignupDto.getPhoneNumber())
                     .set(user.marketingYn, memberInfoUpdateOrSignupDto.getMarketingYn())
                     .set(user.birthDay, memberInfoUpdateOrSignupDto.getBirthDay())

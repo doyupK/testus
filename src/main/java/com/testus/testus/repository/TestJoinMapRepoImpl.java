@@ -31,7 +31,7 @@ public class TestJoinMapRepoImpl extends QuerydslRepositorySupport implements Te
                         Projections.constructor(
                                 ExperienceRecruitment.MyPostDataResponse.class,
                                 experienceRecruitment.seq,
-                                experienceRecruitment.thumbnailUrl,
+                                experienceRecruitment.thumbnail,
                                 experienceRecruitment.title,
                                 experienceRecruitment.currentJoinCount,
                                 experienceRecruitment.endDate

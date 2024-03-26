@@ -2,10 +2,12 @@ package com.testus.testus.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.testus.testus.common.response.ResponseDto;
+import com.testus.testus.common.response.exception.Code;
 import com.testus.testus.config.security.UserDetailsImpl;
 import com.testus.testus.domain.ExperienceRecruitment;
 import com.testus.testus.dto.post.ExperienceRecruitmentThumbnailDto;
 import com.testus.testus.service.ExperienceRecruitmentService;
+import com.testus.testus.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -20,10 +22,11 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/post")
+@RequestMapping("/test")
 @Tag(name = "03. 테스트 관련")
 public class ExperienceRecruitmentController {
     private final ExperienceRecruitmentService experienceRecruitmentService;
+    private final UserService userService;
 
 
     @GetMapping("/latest")
@@ -57,5 +60,35 @@ public class ExperienceRecruitmentController {
                 .body(experienceRecruitmentService.createRecruitment(dto, userDetails.getUser()));
 
     }
+
+    @PostMapping("/add/tester")
+    @Operation(summary = "테스터 추가")
+    public ResponseEntity<ResponseDto<Code>> createTest(@RequestBody ExperienceRecruitment.AddTesterDto dto,
+                                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        return ResponseEntity
+                .ok()
+                .body(experienceRecruitmentService.addTester(dto, userDetails.getUser()));
+    }
+
+    @GetMapping("/")
+    @Operation(summary = "테스트 리스트 조회")
+    public ResponseEntity<Object> getTestList(@RequestParam int lastId,
+                                              @Parameter(example = "APP or GAME or SERVICE")
+                                         @RequestParam String category,
+                                              @Parameter(example = "ALL or AVAILABLE")
+                                         @RequestParam String tag,
+                                              @Parameter(example = "popularity or join or endDate or latest")
+                                         @RequestParam String sortBy,
+                                              @AuthenticationPrincipal UserDetailsImpl userDetails
+                                         ) {
+
+        return ResponseEntity
+                .ok()
+                .body(experienceRecruitmentService.getTestList(lastId, category, tag, sortBy, userDetails.getUser()))
+                ;
+    }
+
+
 
 }

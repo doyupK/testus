@@ -24,6 +24,9 @@ public class User {
     private String providerType;
 
     @Column
+    private Character gender;
+
+    @Column
     private String providerSubject;
 
     @Column
@@ -96,7 +99,7 @@ public class User {
         private String phoneNumber;
         @DateTimeFormat(pattern = "yyyy-MM-dd")
         private LocalDate birthDay;
-        private String gender;
+        private Character gender;
         private String userEmail;
         @Nullable
         private String password;
@@ -110,7 +113,7 @@ public class User {
         private String phoneNumber;
         @DateTimeFormat(pattern = "yyyy-MM-dd")
         private LocalDate birthDay;
-        private String gender;
+        private Character gender;
         private String userEmail;
         @Nullable
         private String password;
@@ -142,7 +145,7 @@ public class User {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class FindPwRequestDto {
+    public static class EmailDto {
         private String userEmail;
     }
 
